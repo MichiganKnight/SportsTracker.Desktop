@@ -1,6 +1,8 @@
 import type {
     GameState,
     GameSummary,
+    GolfEventSummary,
+    TeamGameSummary,
     TeamSummary,
 } from '../../../shared/models/scoreboard.js'
 
@@ -9,6 +11,52 @@ interface GameCardProps {
 }
 
 export function GameCard({ game }: GameCardProps) {
+    if (game.eventType === 'golf') {
+        return <GolfEventCard game={game} />
+    }
+
+    return <TeamGameCard game={game} />
+}
+
+function GolfEventCard({ game }: { game: GolfEventSummary }) {
+    return (
+        <article className="card sports-game-card shadow-sm h-100">
+            <div className="card-body">
+                <div className="golf-event-heading">
+                    <div>
+                        <span className="badge text-bg-success">PGA</span>
+                        <h4>{game.name}</h4>
+                    </div>
+
+                    <span>{game.statusText}</span>
+                </div>
+
+                {game.leaders.length > 0 ? (
+                    <div className="golf-leaders">
+                        {game.leaders.slice(0, 5).map((leader) => (
+                            <div className="golf-leader-row" key={leader.athleteId}>
+                                <strong>{leader.position ?? '-'}</strong>
+
+                                {leader.flagUrl && (
+                                    <img src={leader.flagUrl} alt="" />
+                                )}
+
+                                <span>{leader.name}</span>
+                                <strong>{leader.scoreToPar}</strong>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="golf-empty-message">
+                        Leaderboard information is not available yet.
+                    </p>
+                )}
+            </div>
+        </article>
+    )
+}
+
+function TeamGameCard({ game }: { game: TeamGameSummary }) {
     const isLive =
         game.state === 'in-progress' || game.state === 'halftime'
 

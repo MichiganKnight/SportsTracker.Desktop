@@ -507,3 +507,137 @@
         grid-template-columns: 1fr;
     }
 }
+
+.golf-event-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+.golf-event-heading h4 {
+    margin: 10px 0 0;
+    font-size: 16px;
+}
+
+.golf-event-heading > span {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-align: right;
+}
+
+.golf-leaders {
+    margin-top: 10px;
+}
+
+.golf-leader-row {
+    display: grid;
+    grid-template-columns: 28px 24px minmax(0, 1fr) 48px;
+    min-height: 40px;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 4px;
+    border-bottom: 1px solid rgb(38 49 67 / 70%);
+}
+
+.golf-leader-row:last-child {
+    border-bottom: 0;
+}
+
+.golf-leader-row img {
+    width: 22px;
+    max-height: 16px;
+    object-fit: contain;
+}
+
+.golf-leader-row span {
+    overflow: hidden;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.golf-leader-row > strong:first-child {
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+.golf-leader-row > strong:last-child {
+    font-size: 13px;
+    text-align: right;
+}
+
+.golf-empty-message {
+    margin: 24px 0 10px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.league-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.league-title {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 16px;
+}
+
+.league-title h2 {
+    margin: 4px 0;
+    font-size: clamp(26px, 3vw, 36px);
+}
+
+.league-title-mark {
+    display: grid;
+    width: 62px;
+    height: 62px;
+    flex: 0 0 62px;
+    place-items: center;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.league-title-mark img {
+    max-width: 48px;
+    max-height: 48px;
+    object-fit: contain;
+}
+
+.league-title-mark span {
+    font-size: 28px;
+}
+
+.league-updated {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.league-navigation .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.league-navigation .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+@media (max-width: 1200px) {
+    .league-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

@@ -1,61 +1,68 @@
-import { useEffect, useState } from 'react';
-import { CalendarDays, LayoutDashboard, Radio, Search, Star } from "lucide-react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import {
+    CalendarDays,
+    LayoutDashboard,
+    Radio,
+    Search,
+    Star,
+} from 'lucide-react'
+import { NavLink, Outlet } from 'react-router-dom'
+import { leagueConfigurations } from '../../shared/models/league'
 
 const navigationItems = [
     {
         to: '/',
         label: 'Dashboard',
         icon: LayoutDashboard,
-        end: true
+        end: true,
     },
     {
         to: '/live',
         label: 'Live',
-        icon: Radio
+        icon: Radio,
+        end: false,
     },
     {
         to: '/games',
         label: 'Games',
-        icon: CalendarDays
+        icon: CalendarDays,
+        end: false,
     },
     {
         to: '/following',
         label: 'Following',
-        icon: Star
-    }
-]
-
-const leagues = [
-    { id: 'nfl', name: 'NFL' },
-    { id: 'nba', name: 'NBA' },
-    { id: 'mlb', name: 'MLB' },
-    { id: 'nhl', name: 'NHL' },
-    { id: 'college-football', name: 'College Football' },
-    { id: 'college-basketball', name: 'College Basketball' },
-    { id: 'pga', name: 'PGA Tour' },
+        icon: Star,
+        end: false,
+    },
 ]
 
 export function AppShell() {
-    const [desktopStatus, setDesktopStatus] = useState(() => window.sportsTracker ? 'Connecting...' : 'Browser Preview')
+    const [desktopStatus, setDesktopStatus] = useState(() =>
+        window.sportsTracker ? 'Connecting...' : 'Browser Preview',
+    )
 
     useEffect(() => {
-        if (!window.sportsTracker) {
-            return;
+        const desktopApi = window.sportsTracker
+
+        if (!desktopApi) {
+            return
         }
 
-        void window.sportsTracker.getAppInfo().then((info) => {
-            setDesktopStatus(`Desktop ${info.version}`)
-        }).catch(() => {
-            setDesktopStatus('Desktop Unavailable')
-        })
+        void desktopApi
+            .getAppInfo()
+            .then((info) => {
+                setDesktopStatus(`Desktop ${info.version}`)
+            })
+            .catch(() => {
+                setDesktopStatus('Desktop Unavailable')
+            })
     }, [])
 
     return (
         <div className="app-shell">
             <aside className="sidebar">
                 <div className="brand">
-                    <div className="brannd-mark">ST</div>
+                    <div className="brand-mark">ST</div>
 
                     <div>
                         <strong>SportsTracker</strong>
@@ -63,17 +70,25 @@ export function AppShell() {
                     </div>
                 </div>
 
-                <nav className="sidebar-navigation" aria-label="Main Navigation">
+                <nav
+                    className="sidebar-navigation"
+                    aria-label="Main Navigation"
+                >
                     <p className="sidebar-heading">Overview</p>
 
                     {navigationItems.map((item) => {
-                        const Icon = item.icon;
+                        const Icon = item.icon
 
                         return (
-                            <NavLink key={item.to} to={item.to} end={item.end}
-                                     className={({ isActive }) => isActive ? 'active' : ''}>
-
-                                <Icon size={19} aria-hidden="true"/>
+                            <NavLink
+                                key={item.to}
+                                to={item.to}
+                                end={item.end}
+                                className={({ isActive }) =>
+                                    `sidebar-link${isActive ? ' active' : ''}`
+                                }
+                            >
+                                <Icon size={19} aria-hidden="true" />
                                 <span>{item.label}</span>
                             </NavLink>
                         )
@@ -81,20 +96,25 @@ export function AppShell() {
 
                     <p className="sidebar-heading">Leagues</p>
 
-                    {leagues.map((league) => (
-                        <NavLink key={league.id} to={`/leagues/${league.id}`}
-                                 className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-                            <span className="league-mark">
-                                {league.name.substring(0, 2)}
-                            </span>
+                    {leagueConfigurations.map((league) => (
+                        <NavLink
+                            key={league.id}
+                            to={`/leagues/${league.id}`}
+                            className={({ isActive }) =>
+                                `sidebar-link${isActive ? ' active' : ''}`
+                            }
+                        >
+              <span className="league-mark" aria-hidden="true">
+                {league.icon}
+              </span>
 
-                            <span>{league.name}</span>
+                            <span>{league.displayName}</span>
                         </NavLink>
                     ))}
                 </nav>
 
                 <div className="sidebar-footer">
-                    <span className="connection-dot"/>
+                    <span className="connection-dot" />
                     <span>{desktopStatus}</span>
                 </div>
             </aside>
@@ -107,14 +127,19 @@ export function AppShell() {
                     </div>
 
                     <button className="search-button" type="button">
-                        <Search size={18} aria-hidden="true" className="search-icon"/>
+                        <Search
+                            size={18}
+                            aria-hidden="true"
+                            className="search-icon"
+                        />
+
                         <span>Search Teams and Athletes</span>
                         <kbd>Ctrl K</kbd>
                     </button>
                 </header>
 
                 <main className="page-content">
-                    <Outlet/>
+                    <Outlet />
                 </main>
             </div>
         </div>

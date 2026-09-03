@@ -1,53 +1,19 @@
-import { useEffect, useState } from 'react'
-import {
-    CalendarDays,
-    LoaderCircle,
-    Radio,
-    Star,
-    Trophy,
-} from 'lucide-react'
-import type { Scoreboard } from '../../shared/models/scoreboard.js'
-import { GameCard } from '../components/games/GameCard.js'
+import { CalendarDays, Radio, Star } from 'lucide-react'
+import { ScoreboardGrid } from '../components/games/ScoreboardGrid'
+import { useScoreboard } from '../hooks/useScoreboard'
 
 export function DashboardPage() {
-    const [scoreboard, setScoreboard] = useState<Scoreboard | null>(null)
-
-    const [error, setError] = useState<string | null>(() =>
-        window.sportsTracker ? null : 'Scoreboards require Electron.',
-    )
-
-    const [isLoading, setIsLoading] = useState(
-        Boolean(window.sportsTracker),
-    )
-
-    useEffect(() => {
-        const desktopApi = window.sportsTracker
-
-        if (!desktopApi) {
-            return
-        }
-
-        void desktopApi.scoreboards
-            .getNfl()
-            .then((result) => {
-                setScoreboard(result)
-            })
-            .catch((reason: unknown) => {
-                setError(
-                    reason instanceof Error
-                        ? reason.message
-                        : 'Unable to load the NFL scoreboard.',
-                )
-            })
-            .finally(() => {
-                setIsLoading(false)
-            })
-    }, [])
+    const {
+        scoreboard,
+        error,
+        isLoading,
+    } = useScoreboard('nfl')
 
     const liveGames =
         scoreboard?.games.filter(
             (game) =>
-                game.state === 'in-progress' || game.state === 'halftime',
+                game.state === 'in-progress' ||
+                game.state === 'halftime',
         ).length ?? 0
 
     const summaries = [
@@ -90,7 +56,7 @@ export function DashboardPage() {
                     return (
                         <article className="summary-card" key={summary.label}>
                             <div className="summary-icon">
-                                <Icon size={21} aria-hidden="true"/>
+                                <Icon size={21} aria-hidden="true" />
                             </div>
 
                             <div>
@@ -112,38 +78,18 @@ export function DashboardPage() {
 
                     {scoreboard && (
                         <span>
-              Updated {new Date(scoreboard.updatedAt).toLocaleTimeString()}
+              Updated{' '}
+                            {new Date(scoreboard.updatedAt).toLocaleTimeString()}
             </span>
                     )}
                 </div>
 
-                {isLoading && (
-                    <div className="content-card scoreboard-message">
-                        <LoaderCircle className="spin" size={26}/>
-                        <p>Loading the NFL scoreboard...</p>
-                    </div>
-                )}
-
-                {error && (
-                    <div className="content-card scoreboard-message error-message">
-                        <p>{error}</p>
-                    </div>
-                )}
-
-                {!isLoading && !error && scoreboard?.games.length === 0 && (
-                    <div className="content-card scoreboard-message">
-                        <Trophy size={26}/>
-                        <p>No NFL games were returned.</p>
-                    </div>
-                )}
-
-                {!isLoading && !error && scoreboard && (
-                    <div className="games-grid">
-                        {scoreboard.games.slice(0, 8).map((game) => (
-                            <GameCard game={game} key={game.id}/>
-                        ))}
-                    </div>
-                )}
+                <ScoreboardGrid
+                    scoreboard={scoreboard}
+                    error={error}
+                    isLoading={isLoading}
+                    limit={8}
+                />
             </section>
         </div>
     )

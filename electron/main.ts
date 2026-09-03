@@ -1,7 +1,8 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
-import { getNflScoreboard } from "./services/scoreboard-service.js";
+import { isLeagueId } from '../shared/models/league.js'
+import { getScoreboard } from './services/scoreboard-service.js'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
@@ -47,7 +48,16 @@ app.whenReady().then(() => {
         platform: process.platform,
     }));
 
-    ipcMain.handle('scoreboard:get-nfl', () => getNflScoreboard());
+    ipcMain.handle(
+        'scoreboard:get',
+        (_event, leagueId: unknown) => {
+            if (!isLeagueId(leagueId)) {
+                throw new Error(`Unsupported league: ${String(leagueId)}`)
+            }
+
+            return getScoreboard(leagueId)
+        },
+    )
 
     createWindow();
 

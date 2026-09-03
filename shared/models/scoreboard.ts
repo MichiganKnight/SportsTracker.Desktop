@@ -1,11 +1,4 @@
-export type LeagueId =
-    | 'nfl'
-    | 'college-football'
-    | 'nba'
-    | 'mens-college-basketball'
-    | 'mlb'
-    | 'nhl'
-    | 'pga'
+import type { LeagueId } from './league'
 
 export type GameState =
     | 'scheduled'
@@ -25,16 +18,38 @@ export interface TeamSummary {
     record?: string
 }
 
-export interface GameSummary {
+interface BaseEventSummary {
     id: string
     league: LeagueId
     name: string
     startTime: string
     state: GameState
     statusText: string
+}
+
+export interface TeamGameSummary extends BaseEventSummary {
+    eventType: 'team'
     homeTeam: TeamSummary
     awayTeam: TeamSummary
 }
+
+export interface GolfLeaderboardEntry {
+    athleteId: string
+    name: string
+    shortName: string
+    position?: number
+    scoreToPar: string
+    country?: string
+    flagUrl?: string
+}
+
+export interface GolfEventSummary extends BaseEventSummary {
+    eventType: 'golf'
+    endTime?: string
+    leaders: GolfLeaderboardEntry[]
+}
+
+export type GameSummary = TeamGameSummary | GolfEventSummary
 
 export interface Scoreboard {
     league: LeagueId

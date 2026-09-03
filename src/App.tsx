@@ -2,6 +2,7 @@ import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { DashboardPage } from "./pages/DashboardPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { LeaguePage } from './pages/LeaguePage'
 import './App.css'
 
 function App() {
@@ -12,14 +13,8 @@ function App() {
                     <Route index element={<DashboardPage />} />
 
                     <Route
-                        path="live"
-                        element={
-                            <PlaceholderPage
-                                eyebrow="Scores"
-                                title="Live Games"
-                                description="Follow games and events currently in progress."
-                            />
-                        }
+                        path="leagues/:leagueId"
+                        element={<LeaguePage />}
                     />
 
                     <Route

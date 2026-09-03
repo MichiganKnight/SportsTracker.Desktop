@@ -1,11 +1,30 @@
-import type { GameState, GameSummary, Scoreboard, TeamSummary } from "../../shared/models/scoreboard.js";
+import {
+    getLeagueConfiguration,
+    type LeagueConfiguration,
+    type LeagueId,
+} from '../../shared/models/league.js'
 
-const nflScoreboardUrl = 'https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard';
+import type {
+    GameState,
+    GameSummary,
+    GolfEventSummary,
+    GolfLeaderboardEntry,
+    Scoreboard,
+    TeamGameSummary,
+    TeamSummary,
+} from '../../shared/models/scoreboard.js'
 
-const cacheDurationMilliseconds = 15_000;
+const espnBaseUrl =
+    'https://site.web.api.espn.com/apis/site/v2/sports'
 
-let cachedScoreboard: Scoreboard | undefined;
-let cacheExpiresAt = 0;
+const cacheDurationMilliseconds = 15_000
+
+interface CachedScoreboard {
+    scoreboard: Scoreboard
+    expiresAt: number
+}
+
+const scoreboardCache = new Map<LeagueId, CachedScoreboard>()
 
 interface EspnScoreboardResponse {
     leagues?: EspnLeague[]
@@ -13,8 +32,8 @@ interface EspnScoreboardResponse {
 }
 
 interface EspnLeague {
-    name?: string,
-    abbreviation?: string,
+    name?: string
+    abbreviation?: string
     logos?: EspnLogo[]
 }
 
@@ -22,6 +41,7 @@ interface EspnEvent {
     id?: string
     name?: string
     date?: string
+    endDate?: string
     competitions?: EspnCompetition[]
 }
 
@@ -34,7 +54,9 @@ interface EspnCompetitor {
     id?: string
     homeAway?: 'home' | 'away'
     score?: string
+    order?: number
     team?: EspnTeam
+    athlete?: EspnAthlete
     records?: EspnRecord[]
 }
 
@@ -44,6 +66,16 @@ interface EspnTeam {
     abbreviation?: string
     logo?: string
     logos?: EspnLogo[]
+}
+
+interface EspnAthlete {
+    fullName?: string
+    displayName?: string
+    shortName?: string
+    flag?: {
+        href?: string
+        alt?: string
+    }
 }
 
 interface EspnRecord {
@@ -64,75 +96,182 @@ interface EspnStatus {
     }
 }
 
-export async function getNflScoreboard(): Promise<Scoreboard> {
-    if (cachedScoreboard && Date.now() < cacheExpiresAt) {
-        return cachedScoreboard;
+export async function getScoreboard(
+    leagueId: LeagueId,
+): Promise<Scoreboard> {
+    const cached = scoreboardCache.get(leagueId)
+
+    if (cached && Date.now() < cached.expiresAt) {
+        return cached.scoreboard
     }
 
-    const response = await fetch(nflScoreboardUrl, {
+    const configuration = getLeagueConfiguration(leagueId)
+    const url = createScoreboardUrl(configuration)
+
+    const response = await fetch(url, {
         headers: {
-            'Accept': 'application/json'
-        }
+            accept: 'application/json',
+        },
     })
 
     if (!response.ok) {
-        throw new Error(`ESPN Returned ${response.status} ${response.statusText}`)
+        throw new Error(
+            `ESPN returned ${response.status} ${response.statusText}`,
+        )
     }
 
-    const dto = (await response.json()) as EspnScoreboardResponse;
-    const league = dto?.leagues?.[0]
+    const dto = (await response.json()) as EspnScoreboardResponse
+    const scoreboard = mapScoreboard(dto, configuration)
 
-    const scoreboard: Scoreboard = {
-        league: 'nfl',
-        leagueName: league?.abbreviation ?? league?.name ?? 'NFL',
-        leagueLogoUrl: findLeagueLogo(league?.logos),
-        games: mapGames(dto.events),
-        updatedAt: new Date().toISOString()
-    }
+    scoreboardCache.set(leagueId, {
+        scoreboard,
+        expiresAt: Date.now() + cacheDurationMilliseconds,
+    })
 
-    cachedScoreboard = scoreboard;
-    cacheExpiresAt = Date.now() + cacheDurationMilliseconds;
-
-    return scoreboard;
+    return scoreboard
 }
 
-function mapGames(events: EspnEvent[] | undefined): GameSummary[] {
+function createScoreboardUrl(
+    configuration: LeagueConfiguration,
+): string {
+    return [
+        espnBaseUrl,
+        configuration.sport,
+        configuration.espnLeague,
+        'scoreboard',
+    ].join('/')
+}
+
+function mapScoreboard(
+    dto: EspnScoreboardResponse,
+    configuration: LeagueConfiguration,
+): Scoreboard {
+    const espnLeague = dto.leagues?.[0]
+
+    return {
+        league: configuration.id,
+        leagueName:
+            espnLeague?.abbreviation ??
+            espnLeague?.name ??
+            configuration.displayName,
+        leagueLogoUrl: findLeagueLogo(espnLeague?.logos),
+        games: mapEvents(dto.events, configuration),
+        updatedAt: new Date().toISOString(),
+    }
+}
+
+function mapEvents(
+    events: EspnEvent[] | undefined,
+    configuration: LeagueConfiguration,
+): GameSummary[] {
     if (!events) {
-        return [];
+        return []
     }
 
-    return events.flatMap((event) => {
+    const games: GameSummary[] = []
+
+    for (const event of events) {
         const competition = event.competitions?.[0]
 
-        const home = competition?.competitors?.find((competitor) => competitor.homeAway === 'home')
-        const away = competition?.competitors?.find((competitor) => competitor.homeAway === 'away')
-
-        if (!competition || !home?.team || !away?.team) {
-            return [];
+        if (!competition) {
+            continue
         }
 
-        return [
-            {
-                id: event.id ?? '',
-                league: 'nfl',
-                name: event.name ?? '',
-                startTime: event.date ?? '',
-                state: mapGameState(
-                    competition.status?.type?.name,
-                    competition.status?.type?.state,
+        if (configuration.eventType === 'golf') {
+            games.push(
+                mapGolfEvent(
+                    event,
+                    competition,
+                    configuration.id,
                 ),
-                statusText: competition.status?.type?.shortDetail ?? '',
-                homeTeam: mapTeam(home),
-                awayTeam: mapTeam(away),
-            },
-        ]
-    })
+            )
+
+            continue
+        }
+
+        const teamGame = mapTeamEvent(
+            event,
+            competition,
+            configuration.id,
+        )
+
+        if (teamGame) {
+            games.push(teamGame)
+        }
+    }
+
+    return games
+}
+
+function mapTeamEvent(
+    event: EspnEvent,
+    competition: EspnCompetition,
+    leagueId: LeagueId,
+): TeamGameSummary | null {
+    const home = competition.competitors?.find(
+        (competitor) => competitor.homeAway === 'home',
+    )
+
+    const away = competition.competitors?.find(
+        (competitor) => competitor.homeAway === 'away',
+    )
+
+    if (!home?.team || !away?.team) {
+        return null
+    }
+
+    return {
+        eventType: 'team',
+        id: event.id ?? '',
+        league: leagueId,
+        name: event.name ?? '',
+        startTime: event.date ?? '',
+        state: mapGameState(
+            competition.status?.type?.name,
+            competition.status?.type?.state,
+        ),
+        statusText: competition.status?.type?.shortDetail ?? '',
+        homeTeam: mapTeam(home),
+        awayTeam: mapTeam(away),
+    }
+}
+
+function mapGolfEvent(
+    event: EspnEvent,
+    competition: EspnCompetition,
+    leagueId: LeagueId,
+): GolfEventSummary {
+    const leaders = (competition.competitors ?? [])
+        .filter((competitor) => competitor.athlete)
+        .sort(
+            (left, right) =>
+                (left.order ?? Number.MAX_SAFE_INTEGER) -
+                (right.order ?? Number.MAX_SAFE_INTEGER),
+        )
+        .map(mapGolfer)
+
+    return {
+        eventType: 'golf',
+        id: event.id ?? '',
+        league: leagueId,
+        name: event.name ?? 'PGA Tour Event',
+        startTime: event.date ?? '',
+        endTime: event.endDate,
+        state: mapGameState(
+            competition.status?.type?.name,
+            competition.status?.type?.state,
+        ),
+        statusText: competition.status?.type?.shortDetail ?? '',
+        leaders,
+    }
 }
 
 function mapTeam(competitor: EspnCompetitor): TeamSummary {
     const team = competitor.team!
 
-    const record = competitor.records?.find((item) => item.type === 'total') ?? competitor.records?.[0]
+    const record =
+        competitor.records?.find((item) => item.type === 'total') ??
+        competitor.records?.[0]
 
     return {
         id: team.id ?? competitor.id ?? '',
@@ -144,7 +283,33 @@ function mapTeam(competitor: EspnCompetitor): TeamSummary {
     }
 }
 
-function mapGameState(statusName?: string, statusState?: string): GameState {
+function mapGolfer(
+    competitor: EspnCompetitor,
+): GolfLeaderboardEntry {
+    const athlete = competitor.athlete!
+
+    return {
+        athleteId: competitor.id ?? '',
+        name:
+            athlete.displayName ??
+            athlete.fullName ??
+            'Unknown Golfer',
+        shortName:
+            athlete.shortName ??
+            athlete.displayName ??
+            athlete.fullName ??
+            'Unknown',
+        position: competitor.order,
+        scoreToPar: competitor.score ?? '-',
+        country: athlete.flag?.alt,
+        flagUrl: athlete.flag?.href,
+    }
+}
+
+function mapGameState(
+    statusName?: string,
+    statusState?: string,
+): GameState {
     switch (statusName) {
         case 'STATUS_IN_PROGRESS':
             return 'in-progress'
@@ -176,7 +341,9 @@ function mapGameState(statusName?: string, statusState?: string): GameState {
     return 'scheduled'
 }
 
-function findLeagueLogo(logos?: EspnLogo[]): string | undefined {
+function findLeagueLogo(
+    logos?: EspnLogo[],
+): string | undefined {
     return (
         logos?.find((logo) => logo.rel?.includes('dark'))?.href ??
         logos?.find((logo) => logo.rel?.includes('default'))?.href ??

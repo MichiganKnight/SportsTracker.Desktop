@@ -1,22 +1,23 @@
-import type { Scoreboard } from "../../shared/models/scoreboard.js";
+import type { LeagueId } from '../../shared/models/league.js'
+import type { Scoreboard } from '../../shared/models/scoreboard.js'
 
 interface AppInfo {
-    name: string;
-    version: string;
-    platform: string;
+    name: string
+    version: string
+    platform: string
 }
 
 interface SportsTrackerDesktopApi {
     getAppInfo: () => Promise<AppInfo>
 
     scoreboards: {
-        getNfl: () => Promise<Scoreboard>
+        get: (leagueId: LeagueId) => Promise<Scoreboard>
     }
 }
 
 declare global {
     interface Window {
-        sportsTracker?: SportsTrackerDesktopApi;
+        sportsTracker?: SportsTrackerDesktopApi
     }
 }
 

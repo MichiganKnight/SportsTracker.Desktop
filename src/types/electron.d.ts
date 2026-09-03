@@ -1,3 +1,5 @@
+import type { Scoreboard } from "../../shared/models/scoreboard.js";
+
 interface AppInfo {
     name: string;
     version: string;
@@ -5,7 +7,11 @@ interface AppInfo {
 }
 
 interface SportsTrackerDesktopApi {
-    getAppInfo: () => Promise<AppInfo>;
+    getAppInfo: () => Promise<AppInfo>
+
+    scoreboards: {
+        getNfl: () => Promise<Scoreboard>
+    }
 }
 
 declare global {

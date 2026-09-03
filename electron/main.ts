@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
+import { getNflScoreboard } from "./services/scoreboard-service.js";
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
@@ -38,6 +39,8 @@ app.whenReady().then(() => {
         version: app.getVersion(),
         platform: process.platform,
     }));
+
+    ipcMain.handle('scoreboard:get-nfl', () => getNflScoreboard());
 
     createWindow();
 

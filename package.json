@@ -3,7 +3,7 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "main": "dist-electron/main.js",
+    "main": "dist-electron/electron/main.js",
     "scripts": {
         "dev": "concurrently --kill-others --names \"REACT,ELECTRON\" --prefix-colors \"cyan,magenta\" \"npm:dev:react\" \"npm:dev:electron\"",
         "dev:react": "vite",

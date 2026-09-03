@@ -5,7 +5,7 @@ import {
     Trophy,
 } from 'lucide-react'
 import { Navigate, useParams } from 'react-router-dom'
-import { ScoreboardGrid } from '../components/games/ScoreboardGrid'
+import { LeagueScoreboard } from '../components/games/LeagueScoreboard'
 import { useScoreboard } from '../hooks/useScoreboard'
 import {
     getLeagueConfiguration,
@@ -108,7 +108,7 @@ function ValidLeaguePage({ leagueId }: ValidLeaguePageProps) {
                 </div>
             </section>
 
-            <ScoreboardGrid
+            <LeagueScoreboard
                 scoreboard={scoreboard}
                 error={error}
                 isLoading={isLoading}

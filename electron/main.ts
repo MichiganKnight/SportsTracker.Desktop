@@ -7,8 +7,13 @@ const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
 
 function createWindow() {
+    const windowIconPath = app.isPackaged
+        ? join(app.getAppPath(), 'dist', 'favicon.ico')
+        : join(app.getAppPath(), 'public', 'favicon.ico')
+
     const mainWindow = new BrowserWindow({
         title: 'SportsTracker',
+        icon: windowIconPath,
         width: 1440,
         height: 900,
         minWidth: 1000,

@@ -1,7 +1,10 @@
 {
     "name": "sportstracker",
+    "productName": "SportsTracker",
+    "description": "SportsTracker is a web application that allows users to track various popular sports from ESPN's API.",
+    "author": "Drew Fleming",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.1.0",
     "type": "module",
     "main": "dist-electron/electron/main.js",
     "scripts": {
@@ -11,6 +14,8 @@
         "electron:compile": "tsc -p tsconfig.electron.json",
         "electron:start": "npm run electron:compile && electron .",
         "build": "tsc -b && vite build && npm run electron:compile",
+        "pack:win": "npm run build && electron-builder --win --dir",
+        "dist:win": "npm run build && electron-builder --win nsis",
         "lint": "eslint .",
         "preview": "vite preview"
     },
@@ -28,6 +33,7 @@
         "@vitejs/plugin-react": "^6.1.0",
         "concurrently": "^10.0.5",
         "electron": "^44.1.1",
+        "electron-builder": "^26.15.3",
         "eslint": "^10.9.0",
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-react-refresh": "^0.5.4",
@@ -36,5 +42,38 @@
         "typescript-eslint": "^8.67.0",
         "vite": "^8.2.2",
         "wait-on": "^9.1.0"
+    },
+    "build": {
+        "appId": "com.drew.sportstracker",
+        "productName": "SportsTracker",
+        "asar": true,
+        "directories": {
+            "output": "release"
+        },
+        "files": [
+            "dist/**/*",
+            "dist-electron/**/*",
+            "package.json"
+        ],
+        "win": {
+            "icon": "public/favicon.ico",
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "artifactName": "${productName}-Setup-${version}.${ext}"
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "SportsTracker"
+        }
     }
 }

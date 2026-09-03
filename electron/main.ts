@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
 import { getNflScoreboard } from "./services/scoreboard-service.js";
@@ -39,6 +39,8 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    Menu.setApplicationMenu(null);
+
     ipcMain.handle('app:get-info', () => ({
         name: app.getName(),
         version: app.getVersion(),

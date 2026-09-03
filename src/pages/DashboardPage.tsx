@@ -7,6 +7,7 @@ import {
     Trophy,
 } from 'lucide-react'
 import type { Scoreboard } from '../../shared/models/scoreboard.js'
+import { GameCard } from '../components/games/GameCard.js'
 
 export function DashboardPage() {
     const [scoreboard, setScoreboard] = useState<Scoreboard | null>(null)
@@ -139,91 +140,11 @@ export function DashboardPage() {
                 {!isLoading && !error && scoreboard && (
                     <div className="games-grid">
                         {scoreboard.games.slice(0, 8).map((game) => (
-                            <article className="game-card" key={game.id}>
-                                <div className="game-card-header">
-                  <span className={`game-status ${game.state}`}>
-                    {game.statusText}
-                  </span>
-
-                                    <time dateTime={game.startTime}>
-                                        {formatGameDate(game.startTime)}
-                                    </time>
-                                </div>
-
-                                <TeamRow
-                                    name={game.awayTeam.displayName}
-                                    abbreviation={game.awayTeam.abbreviation}
-                                    logoUrl={game.awayTeam.logoUrl}
-                                    record={game.awayTeam.record}
-                                    score={game.awayTeam.score}
-                                />
-
-                                <TeamRow
-                                    name={game.homeTeam.displayName}
-                                    abbreviation={game.homeTeam.abbreviation}
-                                    logoUrl={game.homeTeam.logoUrl}
-                                    record={game.homeTeam.record}
-                                    score={game.homeTeam.score}
-                                />
-                            </article>
+                            <GameCard game={game} key={game.id}/>
                         ))}
                     </div>
                 )}
             </section>
         </div>
     )
-}
-
-interface TeamRowProps {
-    name: string
-    abbreviation: string
-    logoUrl?: string
-    record?: string
-    score: string
-}
-
-function TeamRow({
-                     name,
-                     abbreviation,
-                     logoUrl,
-                     record,
-                     score,
-                 }: TeamRowProps) {
-    return (
-        <div className="team-score-row">
-            <div className="team-logo">
-                {logoUrl ? (
-                    <img src={logoUrl} alt=""/>
-                ) : (
-                    <span>{abbreviation.substring(0, 2)}</span>
-                )}
-            </div>
-
-            <div className="team-information">
-                <strong>{name}</strong>
-                <span>{record ?? abbreviation}</span>
-            </div>
-
-            <strong className="team-score">{score}</strong>
-        </div>
-    )
-}
-
-function formatGameDate(value: string): string {
-    if (!value) {
-        return 'TBD'
-    }
-
-    const date = new Date(value)
-
-    if (Number.isNaN(date.getTime())) {
-        return 'TBD'
-    }
-
-    return new Intl.DateTimeFormat(undefined, {
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-    }).format(date)
 }

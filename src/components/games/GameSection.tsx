@@ -1,11 +1,11 @@
 import type { LucideIcon } from 'lucide-react'
-import type { TeamGameSummary } from '../../../shared/models/scoreboard'
+import type { GameSummary } from '../../../shared/models/scoreboard'
 import { GameCard } from './GameCard'
 
 interface GameSectionProps {
     title: string
     icon: LucideIcon
-    games: TeamGameSummary[]
+    games: GameSummary[]
 }
 
 export function GameSection({

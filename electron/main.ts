@@ -2,7 +2,10 @@ import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
 import { isLeagueId } from '../shared/models/league.js'
-import { getScoreboard } from './services/scoreboard-service.js'
+import {
+    getAllScoreboards,
+    getScoreboard,
+} from './services/scoreboard-service.js'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
@@ -57,6 +60,11 @@ app.whenReady().then(() => {
 
             return getScoreboard(leagueId)
         },
+    )
+
+    ipcMain.handle(
+        'scoreboard:get-all',
+        () => getAllScoreboards(),
     )
 
     createWindow();

@@ -3,6 +3,7 @@ import { AppShell } from "./components/AppShell";
 import { DashboardPage } from "./pages/DashboardPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { LeaguePage } from './pages/LeaguePage'
+import { LivePage } from './pages/LivePage'
 import './App.css'
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
                         path="leagues/:leagueId"
                         element={<LeaguePage />}
                     />
+
+                    <Route path="live" element={<LivePage />} />
 
                     <Route
                         path="games"

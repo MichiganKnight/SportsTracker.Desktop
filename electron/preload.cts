@@ -6,5 +6,8 @@ contextBridge.exposeInMainWorld('sportsTracker', {
     scoreboards: {
         get: (leagueId: string) =>
             ipcRenderer.invoke('scoreboard:get', leagueId),
+
+        getAll: () =>
+            ipcRenderer.invoke('scoreboard:get-all'),
     },
 });

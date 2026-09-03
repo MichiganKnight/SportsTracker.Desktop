@@ -12,6 +12,7 @@ interface SportsTrackerDesktopApi {
 
     scoreboards: {
         get: (leagueId: LeagueId) => Promise<Scoreboard>
+        getAll: () => Promise<Scoreboard[]>
     }
 }
 

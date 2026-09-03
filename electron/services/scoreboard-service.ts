@@ -1,5 +1,6 @@
 import {
     getLeagueConfiguration,
+    leagueConfigurations,
     type LeagueConfiguration,
     type LeagueId,
 } from '../../shared/models/league.js'
@@ -17,7 +18,9 @@ import type {
 const espnBaseUrl =
     'https://site.web.api.espn.com/apis/site/v2/sports'
 
-const cacheDurationMilliseconds = 15_000
+const liveCacheDuration = 15_000
+const scheduledCacheDuration = 2 * 60_000
+const finalCacheDuration = 30 * 60_000
 
 interface CachedScoreboard {
     scoreboard: Scoreboard
@@ -25,6 +28,11 @@ interface CachedScoreboard {
 }
 
 const scoreboardCache = new Map<LeagueId, CachedScoreboard>()
+
+const scoreboardRequests = new Map<
+    LeagueId,
+    Promise<Scoreboard>
+>()
 
 interface EspnScoreboardResponse {
     leagues?: EspnLeague[]
@@ -105,6 +113,26 @@ export async function getScoreboard(
         return cached.scoreboard
     }
 
+    const pendingRequest = scoreboardRequests.get(leagueId)
+
+    if (pendingRequest) {
+        return pendingRequest
+    }
+
+    const request = loadScoreboard(leagueId)
+
+    scoreboardRequests.set(leagueId, request)
+
+    try {
+        return await request
+    } finally {
+        scoreboardRequests.delete(leagueId)
+    }
+}
+
+async function loadScoreboard(
+    leagueId: LeagueId,
+): Promise<Scoreboard> {
     const configuration = getLeagueConfiguration(leagueId)
     const url = createScoreboardUrl(configuration)
 
@@ -125,10 +153,58 @@ export async function getScoreboard(
 
     scoreboardCache.set(leagueId, {
         scoreboard,
-        expiresAt: Date.now() + cacheDurationMilliseconds,
+        expiresAt:
+            Date.now() + getCacheDuration(scoreboard),
     })
 
     return scoreboard
+}
+
+export async function getAllScoreboards(): Promise<Scoreboard[]> {
+    const results = await Promise.allSettled(
+        leagueConfigurations.map((league) =>
+            getScoreboard(league.id),
+        ),
+    )
+
+    const scoreboards: Scoreboard[] = []
+
+    for (const result of results) {
+        if (result.status === 'fulfilled') {
+            scoreboards.push(result.value)
+        }
+    }
+
+    if (scoreboards.length === 0) {
+        throw new Error('Unable to load any ESPN scoreboards.')
+    }
+
+    return scoreboards
+}
+
+function getCacheDuration(scoreboard: Scoreboard): number {
+    const hasLiveEvents = scoreboard.games.some(
+        (game) =>
+            game.state === 'in-progress' ||
+            game.state === 'halftime',
+    )
+
+    if (hasLiveEvents) {
+        return liveCacheDuration
+    }
+
+    const hasScheduledEvents = scoreboard.games.some(
+        (game) =>
+            game.state === 'scheduled' ||
+            game.state === 'delayed' ||
+            game.state === 'postponed',
+    )
+
+    if (hasScheduledEvents) {
+        return scheduledCacheDuration
+    }
+
+    return finalCacheDuration
 }
 
 function createScoreboardUrl(

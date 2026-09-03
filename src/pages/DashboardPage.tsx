@@ -1,33 +1,36 @@
-import { CalendarDays, Radio, Star } from 'lucide-react'
-import { ScoreboardGrid } from '../components/games/ScoreboardGrid'
-import { useScoreboard } from '../hooks/useScoreboard'
+import { Layers3, Radio, Star } from 'lucide-react'
+import { GameSection } from '../components/games/GameSection'
+import { useAllScoreboards } from '../hooks/useAllScoreboards'
 
 export function DashboardPage() {
     const {
-        scoreboard,
+        scoreboards,
         error,
         isLoading,
-    } = useScoreboard('nfl')
+    } = useAllScoreboards()
 
-    const liveGames =
-        scoreboard?.games.filter(
-            (game) =>
-                game.state === 'in-progress' ||
-                game.state === 'halftime',
-        ).length ?? 0
+    const allGames = scoreboards.flatMap(
+        (scoreboard) => scoreboard.games,
+    )
+
+    const liveGames = allGames.filter(
+        (game) =>
+            game.state === 'in-progress' ||
+            game.state === 'halftime',
+    )
 
     const summaries = [
         {
             label: 'Live Events',
-            value: liveGames.toString(),
-            detail: 'NFL events currently live',
+            value: liveGames.length.toString(),
+            detail: 'Events currently in progress',
             icon: Radio,
         },
         {
-            label: 'NFL Games',
-            value: scoreboard?.games.length.toString() ?? '0',
-            detail: 'Games returned by ESPN',
-            icon: CalendarDays,
+            label: 'Leagues',
+            value: scoreboards.length.toString(),
+            detail: `${allGames.length} total events loaded`,
+            icon: Layers3,
         },
         {
             label: 'Following',
@@ -44,7 +47,8 @@ export function DashboardPage() {
                     <p className="page-eyebrow">Overview</p>
                     <h2>Your sports dashboard</h2>
                     <p>
-                        Follow live games, leagues, teams, and athletes from one place.
+                        Follow live games, leagues, teams, and athletes from one
+                        place.
                     </p>
                 </div>
             </section>
@@ -69,27 +73,22 @@ export function DashboardPage() {
                 })}
             </section>
 
-            <section className="scoreboard-section">
-                <div className="section-heading">
-                    <div>
-                        <p className="page-eyebrow">NFL</p>
-                        <h3>Scoreboard</h3>
+            <section className="dashboard-live-preview">
+                {isLoading ? (
+                    <div className="content-card scoreboard-message">
+                        Loading scoreboards...
                     </div>
-
-                    {scoreboard && (
-                        <span>
-              Updated{' '}
-                            {new Date(scoreboard.updatedAt).toLocaleTimeString()}
-            </span>
-                    )}
-                </div>
-
-                <ScoreboardGrid
-                    scoreboard={scoreboard}
-                    error={error}
-                    isLoading={isLoading}
-                    limit={8}
-                />
+                ) : error && scoreboards.length === 0 ? (
+                    <div className="content-card scoreboard-message error-message">
+                        {error}
+                    </div>
+                ) : (
+                    <GameSection
+                        title="Live Now"
+                        icon={Radio}
+                        games={liveGames.slice(0, 6)}
+                    />
+                )}
             </section>
         </div>
     )

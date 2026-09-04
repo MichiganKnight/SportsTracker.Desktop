@@ -42,29 +42,55 @@ function createWindow() {
     void mainWindow.loadURL(developmentUrl);
 }
 
+function validateRequestedDate(
+    value: unknown,
+): string | undefined {
+    if (value === undefined || value === null) {
+        return undefined
+    }
+
+    if (
+        typeof value !== 'string' ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(value)
+    ) {
+        throw new Error('The requested date is invalid.')
+    }
+
+    const date = new Date(`${value}T00:00:00Z`)
+
+    if (
+        Number.isNaN(date.getTime()) ||
+        date.toISOString().slice(0, 10) !== value
+    ) {
+        throw new Error('The requested date is invalid.')
+    }
+
+    return value
+}
+
 app.whenReady().then(() => {
     Menu.setApplicationMenu(null);
 
-    ipcMain.handle('app:get-info', () => ({
-        name: app.getName(),
-        version: app.getVersion(),
-        platform: process.platform,
-    }));
-
     ipcMain.handle(
         'scoreboard:get',
-        (_event, leagueId: unknown) => {
+        (_event, leagueId: unknown, requestedDate: unknown) => {
             if (!isLeagueId(leagueId)) {
                 throw new Error(`Unsupported league: ${String(leagueId)}`)
             }
 
-            return getScoreboard(leagueId)
+            return getScoreboard(
+                leagueId,
+                validateRequestedDate(requestedDate),
+            )
         },
     )
 
     ipcMain.handle(
         'scoreboard:get-all',
-        () => getAllScoreboards(),
+        (_event, requestedDate: unknown) =>
+            getAllScoreboards(
+                validateRequestedDate(requestedDate),
+            ),
     )
 
     createWindow();

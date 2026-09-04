@@ -4,6 +4,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import { LeaguePage } from './pages/LeaguePage'
 import { LivePage } from './pages/LivePage'
+import { GamesPage } from './pages/GamesPage'
 import './App.css'
 
 function App() {
@@ -20,16 +21,7 @@ function App() {
 
                     <Route path="live" element={<LivePage />} />
 
-                    <Route
-                        path="games"
-                        element={
-                            <PlaceholderPage
-                                eyebrow="Schedule"
-                                title="Games"
-                                description="Browse games by league and date."
-                            />
-                        }
-                    />
+                    <Route path="games" element={<GamesPage />} />
 
                     <Route
                         path="following"

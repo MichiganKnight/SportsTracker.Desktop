@@ -713,3 +713,88 @@
 .live-empty-state p {
     margin: 0;
 }
+
+.games-date-card {
+    display: grid;
+    grid-template-columns: 145px minmax(0, 1fr) 145px;
+    min-height: 92px;
+    margin-top: 26px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+}
+
+.games-date-nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: var(--text-muted);
+    background: transparent;
+    border: 0;
+    transition:
+            color 150ms ease,
+            background 150ms ease;
+}
+
+.games-date-nav-button:first-child {
+    border-right: 1px solid var(--border);
+}
+
+.games-date-nav-button:last-child {
+    border-left: 1px solid var(--border);
+}
+
+.games-date-nav-button:hover {
+    color: var(--text);
+    background: rgb(255 255 255 / 4%);
+}
+
+.games-date-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.games-date-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 7px;
+    color: var(--text-muted);
+}
+
+.games-date-actions input {
+    color: var(--text-muted);
+    color-scheme: dark;
+    background: transparent;
+    border: 0;
+}
+
+.games-date-actions button {
+    padding: 0;
+    color: var(--accent);
+    background: transparent;
+    border: 0;
+}
+
+.games-page-scoreboards {
+    margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+    .games-date-card {
+        grid-template-columns: 90px minmax(0, 1fr) 90px;
+    }
+
+    .games-date-nav-button {
+        font-size: 0;
+    }
+
+    .games-date-nav-button svg {
+        width: 20px;
+        height: 20px;
+    }
+}

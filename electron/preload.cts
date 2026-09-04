@@ -4,10 +4,17 @@ contextBridge.exposeInMainWorld('sportsTracker', {
     getAppInfo: () => ipcRenderer.invoke('app:get-info'),
 
     scoreboards: {
-        get: (leagueId: string) =>
-            ipcRenderer.invoke('scoreboard:get', leagueId),
+        get: (leagueId: string, requestedDate?: string) =>
+            ipcRenderer.invoke(
+                'scoreboard:get',
+                leagueId,
+                requestedDate,
+            ),
 
-        getAll: () =>
-            ipcRenderer.invoke('scoreboard:get-all'),
+        getAll: (requestedDate?: string) =>
+            ipcRenderer.invoke(
+                'scoreboard:get-all',
+                requestedDate,
+            ),
     },
 });

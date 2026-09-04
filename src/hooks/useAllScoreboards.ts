@@ -3,12 +3,21 @@ import type { Scoreboard } from '../../shared/models/scoreboard'
 
 const refreshIntervalMilliseconds = 15_000
 
-export function useAllScoreboards() {
-    const desktopApi = window.sportsTracker
+interface AllScoreboardsState {
+    requestKey: string
+    scoreboards: Scoreboard[]
+    error: string | null
+}
 
-    const [scoreboards, setScoreboards] = useState<Scoreboard[]>([])
-    const [error, setError] = useState<string | null>(null)
-    const [hasLoaded, setHasLoaded] = useState(false)
+export function useAllScoreboards(requestedDate?: string) {
+    const desktopApi = window.sportsTracker
+    const requestKey = requestedDate ?? 'current'
+
+    const [state, setState] = useState<AllScoreboardsState>(() => ({
+        requestKey,
+        scoreboards: [],
+        error: null,
+    }))
 
     useEffect(() => {
         if (!desktopApi) {
@@ -19,43 +28,55 @@ export function useAllScoreboards() {
 
         const requestScoreboards = () => {
             void desktopApi.scoreboards
-                .getAll()
+                .getAll(requestedDate)
                 .then((results) => {
                     if (!requestIsActive) {
                         return
                     }
 
-                    setScoreboards(results)
-                    setError(null)
-                    setHasLoaded(true)
+                    setState({
+                        requestKey,
+                        scoreboards: results,
+                        error: null,
+                    })
                 })
                 .catch((reason: unknown) => {
                     if (!requestIsActive) {
                         return
                     }
 
-                    setError(
-                        reason instanceof Error
-                            ? reason.message
-                            : 'Unable to load ESPN scoreboards.',
-                    )
-
-                    setHasLoaded(true)
+                    setState({
+                        requestKey,
+                        scoreboards: [],
+                        error:
+                            reason instanceof Error
+                                ? reason.message
+                                : 'Unable to load ESPN scoreboards.',
+                    })
                 })
         }
 
         requestScoreboards()
 
-        const refreshTimer = window.setInterval(
-            requestScoreboards,
-            refreshIntervalMilliseconds,
-        )
+        const shouldRefresh =
+            requestedDate === undefined ||
+            requestedDate === getCurrentLocalDate()
+
+        const refreshTimer = shouldRefresh
+            ? window.setInterval(
+                requestScoreboards,
+                refreshIntervalMilliseconds,
+            )
+            : undefined
 
         return () => {
             requestIsActive = false
-            window.clearInterval(refreshTimer)
+
+            if (refreshTimer !== undefined) {
+                window.clearInterval(refreshTimer)
+            }
         }
-    }, [desktopApi])
+    }, [desktopApi, requestKey, requestedDate])
 
     if (!desktopApi) {
         return {
@@ -65,9 +86,22 @@ export function useAllScoreboards() {
         }
     }
 
+    const stateMatchesRequest = state.requestKey === requestKey
+
     return {
-        scoreboards,
-        error,
-        isLoading: !hasLoaded,
+        scoreboards: stateMatchesRequest ? state.scoreboards : [],
+        error: stateMatchesRequest ? state.error : null,
+        isLoading:
+            !stateMatchesRequest ||
+            (state.scoreboards.length === 0 && state.error === null),
     }
+}
+
+function getCurrentLocalDate(): string {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+
+    return `${year}-${month}-${day}`
 }

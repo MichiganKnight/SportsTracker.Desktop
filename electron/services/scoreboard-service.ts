@@ -27,10 +27,10 @@ interface CachedScoreboard {
     expiresAt: number
 }
 
-const scoreboardCache = new Map<LeagueId, CachedScoreboard>()
+const scoreboardCache = new Map<string, CachedScoreboard>()
 
 const scoreboardRequests = new Map<
-    LeagueId,
+    string,
     Promise<Scoreboard>
 >()
 
@@ -106,35 +106,38 @@ interface EspnStatus {
 
 export async function getScoreboard(
     leagueId: LeagueId,
+    requestedDate?: string,
 ): Promise<Scoreboard> {
-    const cached = scoreboardCache.get(leagueId)
+    const cacheKey = createCacheKey(leagueId, requestedDate)
+    const cached = scoreboardCache.get(cacheKey)
 
     if (cached && Date.now() < cached.expiresAt) {
         return cached.scoreboard
     }
 
-    const pendingRequest = scoreboardRequests.get(leagueId)
+    const pendingRequest = scoreboardRequests.get(cacheKey)
 
     if (pendingRequest) {
         return pendingRequest
     }
 
-    const request = loadScoreboard(leagueId)
+    const request = loadScoreboard(leagueId, requestedDate)
 
-    scoreboardRequests.set(leagueId, request)
+    scoreboardRequests.set(cacheKey, request)
 
     try {
         return await request
     } finally {
-        scoreboardRequests.delete(leagueId)
+        scoreboardRequests.delete(cacheKey)
     }
 }
 
 async function loadScoreboard(
     leagueId: LeagueId,
+    requestedDate?: string,
 ): Promise<Scoreboard> {
     const configuration = getLeagueConfiguration(leagueId)
-    const url = createScoreboardUrl(configuration)
+    const url = createScoreboardUrl(configuration, requestedDate)
 
     const response = await fetch(url, {
         headers: {
@@ -151,19 +154,24 @@ async function loadScoreboard(
     const dto = (await response.json()) as EspnScoreboardResponse
     const scoreboard = mapScoreboard(dto, configuration)
 
-    scoreboardCache.set(leagueId, {
+    const cacheKey = createCacheKey(leagueId, requestedDate)
+
+    scoreboardCache.set(cacheKey, {
         scoreboard,
         expiresAt:
-            Date.now() + getCacheDuration(scoreboard),
+            Date.now() +
+            getCacheDuration(scoreboard, requestedDate),
     })
 
     return scoreboard
 }
 
-export async function getAllScoreboards(): Promise<Scoreboard[]> {
+export async function getAllScoreboards(
+    requestedDate?: string,
+): Promise<Scoreboard[]> {
     const results = await Promise.allSettled(
         leagueConfigurations.map((league) =>
-            getScoreboard(league.id),
+            getScoreboard(league.id, requestedDate),
         ),
     )
 
@@ -182,7 +190,17 @@ export async function getAllScoreboards(): Promise<Scoreboard[]> {
     return scoreboards
 }
 
-function getCacheDuration(scoreboard: Scoreboard): number {
+function getCacheDuration(
+    scoreboard: Scoreboard,
+    requestedDate?: string,
+): number {
+    if (
+        requestedDate &&
+        requestedDate < getCurrentLocalDate()
+    ) {
+        return 24 * 60 * 60_000
+    }
+
     const hasLiveEvents = scoreboard.games.some(
         (game) =>
             game.state === 'in-progress' ||
@@ -207,15 +225,40 @@ function getCacheDuration(scoreboard: Scoreboard): number {
     return finalCacheDuration
 }
 
+function getCurrentLocalDate(): string {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+
+    return `${year}-${month}-${day}`
+}
+
 function createScoreboardUrl(
     configuration: LeagueConfiguration,
+    requestedDate?: string,
 ): string {
-    return [
+    const baseUrl = [
         espnBaseUrl,
         configuration.sport,
         configuration.espnLeague,
         'scoreboard',
     ].join('/')
+
+    if (!requestedDate) {
+        return baseUrl
+    }
+
+    const espnDate = requestedDate.replaceAll('-', '')
+
+    return `${baseUrl}?dates=${espnDate}`
+}
+
+function createCacheKey(
+    leagueId: LeagueId,
+    requestedDate?: string,
+): string {
+    return `${leagueId}:${requestedDate ?? 'current'}`
 }
 
 function mapScoreboard(

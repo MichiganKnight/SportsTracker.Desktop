@@ -71,6 +71,12 @@ function validateRequestedDate(
 app.whenReady().then(() => {
     Menu.setApplicationMenu(null);
 
+    ipcMain.handle('app:get-info', () => {
+        return {
+            version: app.getVersion(),
+        }
+    })
+
     ipcMain.handle(
         'scoreboard:get',
         (_event, leagueId: unknown, requestedDate: unknown) => {

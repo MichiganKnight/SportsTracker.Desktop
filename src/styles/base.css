@@ -1,0 +1,99 @@
+html,
+body,
+#root {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100%;
+    margin: 0;
+}
+
+html {
+    background: var(--st-bg);
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: var(--st-bg);
+    color: var(--st-text);
+    font-family: inherit;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    color: inherit;
+}
+
+a {
+    color: var(--st-primary);
+}
+
+a:hover {
+    color: var(--st-primary);
+}
+
+img {
+    max-width: 100%;
+}
+
+::selection {
+    background: rgba(var(--st-primary-rgb), 0.3);
+    color: var(--st-text);
+}
+
+:focus-visible {
+    outline: 2px solid var(--st-primary);
+    outline-offset: 2px;
+}
+
+.text-muted {
+    color: var(--st-text-muted) !important;
+}
+
+.card {
+    background: var(--st-surface);
+    color: var(--st-text);
+    border-color: var(--st-border);
+}
+
+.alert {
+    color: var(--st-text);
+    background: var(--st-surface);
+    border-color: var(--st-border);
+}
+
+body,
+.app-shell,
+.sidebar,
+.topbar,
+.card,
+.search-button,
+.theme-toggle,
+.sidebar-link {
+    transition:
+            background-color var(--st-theme-transition-duration)
+            var(--st-theme-transition-easing),
+            color var(--st-theme-transition-duration)
+            var(--st-theme-transition-easing),
+            border-color var(--st-theme-transition-duration)
+            var(--st-theme-transition-easing);
+}

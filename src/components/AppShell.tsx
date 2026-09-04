@@ -2,12 +2,30 @@ import { useEffect, useState } from 'react'
 import {
     CalendarDays,
     LayoutDashboard,
+    Moon,
     Radio,
     Search,
     Star,
+    Sun
 } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { leagueConfigurations } from '../../shared/models/league'
+
+type Theme = 'dark' | 'light'
+
+const themeStorageKey = 'sportsTracker.theme'
+
+function getInitialTheme(): Theme {
+    const savedTheme = localStorage.getItem(themeStorageKey)
+
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+        return savedTheme
+    }
+
+    return window.matchMedia('(prefers-color-scheme: light)').matches
+        ? 'light'
+        : 'dark'
+}
 
 const navigationItems = [
     {
@@ -41,6 +59,8 @@ export function AppShell() {
         window.sportsTracker ? 'Connecting...' : 'Browser Preview',
     )
 
+    const [theme, setTheme] = useState<Theme>(getInitialTheme)
+
     useEffect(() => {
         const desktopApi = window.sportsTracker
 
@@ -57,6 +77,15 @@ export function AppShell() {
                 setDesktopStatus('Desktop Unavailable')
             })
     }, [])
+
+    useEffect(() => {
+        const root = document.documentElement
+
+        root.dataset.theme = theme
+        root.dataset.bsTheme = theme
+
+        localStorage.setItem(themeStorageKey, theme)
+    }, [theme])
 
     return (
         <div className="app-shell">
@@ -126,16 +155,36 @@ export function AppShell() {
                         <h1>Sports at a Glance</h1>
                     </div>
 
-                    <button className="search-button" type="button">
-                        <Search
-                            size={18}
-                            aria-hidden="true"
-                            className="search-icon"
-                        />
+                    <div className="topbar-actions">
+                        <button className="search-button" type="button">
+                            <Search
+                                size={18}
+                                aria-hidden="true"
+                                className="search-icon"
+                            />
 
-                        <span>Search Teams and Athletes</span>
-                        <kbd>Ctrl K</kbd>
-                    </button>
+                            <span>Search Teams and Athletes</span>
+                            <kbd>Ctrl K</kbd>
+                        </button>
+
+                        <button
+                            className="theme-toggle"
+                            type="button"
+                            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                            onClick={() =>
+                                setTheme((currentTheme) =>
+                                    currentTheme === 'dark' ? 'light' : 'dark',
+                                )
+                            }
+                        >
+                            {theme === 'dark' ? (
+                                <Sun size={18} aria-hidden="true" />
+                            ) : (
+                                <Moon size={18} aria-hidden="true" />
+                            )}
+                        </button>
+                    </div>
                 </header>
 
                 <main className="page-content">

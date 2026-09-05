@@ -29,7 +29,7 @@ export function Sidebar({ leagues }: SidebarProps) {
                 GENERAL
             </div>
 
-            <NavLink to="/dashboard" end className={getNavigationClass}>
+            <NavLink to="/dashboard" className={getNavigationClass}>
                 <span className="sidebar-icon">
                     <BsHouseDoor />
                 </span>

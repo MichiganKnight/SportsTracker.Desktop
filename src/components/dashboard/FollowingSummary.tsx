@@ -1,6 +1,11 @@
 import { NavLink } from "react-router-dom";
 
-export function FollowingSummary() {
+interface FollowingSummaryProps {
+    teamCount: number;
+    athleteCount: number;
+}
+
+export function FollowingSummary({ teamCount, athleteCount }: FollowingSummaryProps) {
     return (
         <div className="card shadow-sm mb-4 dashboard-summary-card h-100">
             <div className="card-body">
@@ -23,7 +28,9 @@ export function FollowingSummary() {
                 <div className="row g-3 mt-2">
                     <div className="col-sm-6">
                         <div className="dashboard-summary-stat">
-                            <div className="dashboard-summary-stat-value" data-dashboard-favorite-team-count>0</div>
+                            <div className="dashboard-summary-stat-value">
+                                {teamCount}
+                            </div>
 
                             <div className="dashboard-summary-stat-label">
                                 Favorite Teams
@@ -33,7 +40,9 @@ export function FollowingSummary() {
 
                     <div className="col-sm-6">
                         <div className="dashboard-summary-stat">
-                            <div className="dashboard-summary-stat-value" data-dashboard-favorite-athlete-count>0</div>
+                            <div className="dashboard-summary-stat-value">
+                                {athleteCount}
+                            </div>
 
                             <div className="dashboard-summary-stat-label">
                                 Favorite Players

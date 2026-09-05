@@ -219,3 +219,70 @@
 .dashboard-league-summary-name {
     white-space: nowrap;
 }
+
+.placeholder-page {
+    min-height: 160px;
+}
+
+.placeholder-page .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.placeholder-page h2 {
+    color: var(--st-text);
+}
+
+.dashboard-feature-section h3 {
+    color: var(--st-text);
+}
+
+.dashboard-feature-section h3 svg {
+    vertical-align: -0.12em;
+}
+
+.dashboard-favorite-team-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 2.5rem;
+    color: var(--st-text);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.dashboard-favorite-athlete-initials {
+    color: var(--st-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.team-logo-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--st-text);
+    background: var(--st-surface);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.team-row-details {
+    min-width: 0;
+}
+
+.team-row-name {
+    overflow: hidden;
+    color: var(--st-text);
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

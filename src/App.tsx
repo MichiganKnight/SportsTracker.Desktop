@@ -1,8 +1,9 @@
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
-import { DashboardPage } from "./pages/DashboardPage";
-import { dashboardOverviewMock } from "./mock-data/dashboard.ts";
 import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
+import { DashboardLayout } from "./pages/dashboard/DashboardLayout.tsx";
+import { DashboardOverviewPage } from "./pages/dashboard/DashboardOverviewPage.tsx";
+import { DashboardFollowingPage } from "./pages/dashboard/DashboardFollowingPage.tsx";
 
 function App() {
     return (
@@ -11,13 +12,15 @@ function App() {
                 <Route path="/" element={<AppShell />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
 
-                    <Route path="dashboard" element={<DashboardPage {...dashboardOverviewMock} />} />
+                    <Route path="dashboard" element={<DashboardLayout />}>
+                        <Route index element={<DashboardOverviewPage />} />
 
-                    <Route path="dashboard/following" element={<PlaceholderPage eyebrow="Dashboard" title="Following" description="Folllow Favorite Teams and Leagues" />} />
+                        <Route path="following" element={<DashboardFollowingPage />} />
 
-                    <Route path="dashboard/live" element={<PlaceholderPage eyebrow="Dashboard" title="Live Now" description="View Events Currently in Progress" />} />
+                        <Route path="live" element={<PlaceholderPage eyebrow="Dashboard" title="Live Now" description="View Events Currently in Progress" />} />
 
-                    <Route path="dashboard/leagues" element={<PlaceholderPage eyebrow="Dashboard" title="Leagues" description="Browse All Supported Leagues" />} />
+                        <Route path="leagues" element={<PlaceholderPage eyebrow="Dashboard" title="Leagues" description="Browse All Supported Leagues" />} />
+                    </Route>
 
                     <Route path="games" element={<PlaceholderPage eyebrow="Schedule" title="Today's Games" description="Browse Games" />} />
 

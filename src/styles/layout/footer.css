@@ -1,0 +1,14 @@
+footer {
+    background: var(--st-navbar);
+    border-top: 1px solid var(--st-border);
+    color: var(--st-text-muted);
+}
+
+.connection-dot {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    background: var(--st-success);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(var(--st-success-rgb), 0.12);
+}

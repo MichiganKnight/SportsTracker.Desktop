@@ -1,91 +1,97 @@
-export const leagueConfigurations = [
-    {
-        id: 'nfl',
-        sport: 'football',
-        espnLeague: 'nfl',
-        displayName: 'NFL',
-        shortName: 'NFL',
-        icon: '🏈',
-        eventType: 'team',
-    },
-    {
-        id: 'college-football',
-        sport: 'football',
-        espnLeague: 'college-football',
-        displayName: 'College Football',
-        shortName: 'CFB',
-        icon: '🎓',
-        eventType: 'team',
-    },
-    {
-        id: 'nba',
-        sport: 'basketball',
-        espnLeague: 'nba',
-        displayName: 'NBA',
-        shortName: 'NBA',
-        icon: '🏀',
-        eventType: 'team',
-    },
-    {
-        id: 'mens-college-basketball',
-        sport: 'basketball',
-        espnLeague: 'mens-college-basketball',
-        displayName: 'College Basketball',
-        shortName: 'CBB',
-        icon: '🎓',
-        eventType: 'team',
-    },
-    {
-        id: 'mlb',
-        sport: 'baseball',
-        espnLeague: 'mlb',
-        displayName: 'MLB',
-        shortName: 'MLB',
-        icon: '⚾',
-        eventType: 'team',
-    },
-    {
-        id: 'nhl',
-        sport: 'hockey',
-        espnLeague: 'nhl',
-        displayName: 'NHL',
-        shortName: 'NHL',
-        icon: '🏒',
-        eventType: 'team',
-    },
-    {
-        id: 'pga',
-        sport: 'golf',
-        espnLeague: 'pga',
-        displayName: 'PGA Tour',
-        shortName: 'PGA',
-        icon: '⛳',
-        eventType: 'golf',
-    },
-] as const
+export const Sport = {
+    Football: 'Football',
+    Basketball: 'Basketball',
+    Baseball: 'Baseball',
+    Hockey: 'Hockey',
+    Golf: 'Golf',
+} as const;
 
-export type LeagueConfiguration =
-    (typeof leagueConfigurations)[number]
+export const League = {
+    NFL: "NFL",
+    CFB: "CFB",
+    NBA: "NBA",
+    CBB: "CBB",
+    MLB: "MLB",
+    NHL: "NHL",
+    PGA: "PGA"
+} as const;
 
-export type LeagueId = LeagueConfiguration['id']
+export type League = typeof League[keyof typeof League];
+export type Sport = typeof Sport[keyof typeof Sport];
 
-export function isLeagueId(value: unknown): value is LeagueId {
-    return (
-        typeof value === 'string' &&
-        leagueConfigurations.some((league) => league.id === value)
-    )
+export interface LeagueInfo {
+    league: League;
+    sport: Sport;
+    espnSport: string;
+    espnLeague: string;
+    displayName: string;
+    icon?: string;
+    logo?: string;
+    darkLogo?: string;
+    displayOrder?: number;
 }
 
-export function getLeagueConfiguration(
-    leagueId: LeagueId,
-): LeagueConfiguration {
-    const configuration = leagueConfigurations.find(
-        (league) => league.id === leagueId,
-    )
-
-    if (!configuration) {
-        throw new Error(`Unsupported league: ${leagueId}`)
+export const Leagues: Record<League, LeagueInfo> = {
+    [League.NFL]: {
+        league: League.NFL,
+        sport: Sport.Football,
+        espnSport: "football",
+        espnLeague: "nfl",
+        displayName: "NFL",
+        icon: "🏈"
+    },
+    [League.CFB]: {
+        league: League.CFB,
+        sport: Sport.Football,
+        espnSport: "football",
+        espnLeague: "college-football",
+        displayName: "College Football",
+        icon: "🎓"
+    },
+    [League.NBA]: {
+        league: League.NBA,
+        sport: Sport.Basketball,
+        espnSport: "basketball",
+        espnLeague: "nba",
+        displayName: "NBA",
+        icon: "🏀"
+    },
+    [League.CBB]: {
+        league: League.CBB,
+        sport: Sport.Basketball,
+        espnSport: "basketball",
+        espnLeague: "mens-college-basketball",
+        displayName: "College Basketball",
+        icon: "🎓"
+    },
+    [League.MLB]: {
+        league: League.MLB,
+        sport: Sport.Baseball,
+        espnSport: "baseball",
+        espnLeague: "mlb",
+        displayName: "MLB",
+        icon: "⚾"
+    },
+    [League.NHL]: {
+        league: League.NHL,
+        sport: Sport.Hockey,
+        espnSport: "hockey",
+        espnLeague: "nhl",
+        displayName: "NHL",
+        icon: "🏒"
+    },
+    [League.PGA]: {
+        league: League.PGA,
+        sport: Sport.Golf,
+        espnSport: "golf",
+        espnLeague: "pga",
+        displayName: "PGA Tour",
+        icon: "⛳"
     }
+};
 
-    return configuration
+export const LeagueConfiguration = {
+    getAll: (): League[] => Object.keys(Leagues) as League[],
+
+    get: (league: League): LeagueInfo => Leagues[league],
 }

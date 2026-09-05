@@ -1,11 +1,6 @@
-import { app, BrowserWindow, ipcMain, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain,  } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
-import { isLeagueId } from '../shared/models/league.js'
-import {
-    getAllScoreboards,
-    getScoreboard,
-} from './services/scoreboard-service.js'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
@@ -18,11 +13,11 @@ function createWindow() {
     const mainWindow = new BrowserWindow({
         title: 'SportsTracker',
         icon: windowIconPath,
-        width: 1440,
-        height: 900,
+        width: 1280,
+        height: 700,
         minWidth: 1000,
         minHeight: 650,
-        backgroundColor: '#10141c',
+        show: false,
         webPreferences: {
             preload: join(currentDirectory, 'preload.cjs'),
             contextIsolation: true,
@@ -30,6 +25,9 @@ function createWindow() {
             sandbox: true
         }
     });
+
+    mainWindow.maximize();
+    mainWindow.show();
 
     if (app.isPackaged) {
         const rendererPath = join(app.getAppPath(), 'dist', 'index.html');
@@ -42,62 +40,14 @@ function createWindow() {
     void mainWindow.loadURL(developmentUrl);
 }
 
-function validateRequestedDate(
-    value: unknown,
-): string | undefined {
-    if (value === undefined || value === null) {
-        return undefined
-    }
-
-    if (
-        typeof value !== 'string' ||
-        !/^\d{4}-\d{2}-\d{2}$/.test(value)
-    ) {
-        throw new Error('The requested date is invalid.')
-    }
-
-    const date = new Date(`${value}T00:00:00Z`)
-
-    if (
-        Number.isNaN(date.getTime()) ||
-        date.toISOString().slice(0, 10) !== value
-    ) {
-        throw new Error('The requested date is invalid.')
-    }
-
-    return value
-}
-
 app.whenReady().then(() => {
-    Menu.setApplicationMenu(null);
+    //Menu.setApplicationMenu(null);
 
     ipcMain.handle('app:get-info', () => {
         return {
             version: app.getVersion(),
         }
     })
-
-    ipcMain.handle(
-        'scoreboard:get',
-        (_event, leagueId: unknown, requestedDate: unknown) => {
-            if (!isLeagueId(leagueId)) {
-                throw new Error(`Unsupported league: ${String(leagueId)}`)
-            }
-
-            return getScoreboard(
-                leagueId,
-                validateRequestedDate(requestedDate),
-            )
-        },
-    )
-
-    ipcMain.handle(
-        'scoreboard:get-all',
-        (_event, requestedDate: unknown) =>
-            getAllScoreboards(
-                validateRequestedDate(requestedDate),
-            ),
-    )
 
     createWindow();
 

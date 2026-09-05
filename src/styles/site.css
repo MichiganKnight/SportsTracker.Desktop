@@ -41,31 +41,31 @@ body {
 }
 
 .league-nfl {
-    border-left: 4px solid #2E8B57;
-}
-
-.league-mlb {
-    border-left: 4px solid #005A9C;
-}
-
-.league-nba {
-    border-left: 4px solid #C8102E;
-}
-
-.league-nhl {
-    border-left: 4px solid #6C757D;
+    --st-league-color: #2e8b57;
 }
 
 .league-cfb {
-    border-left: 4px solid #FF8200;
+    --st-league-color: #ff8200;
+}
+
+.league-nba {
+    --st-league-color: #c8102e;
 }
 
 .league-cbb {
-    border-left: 4px solid #7A3E00;
+    --st-league-color: #7a3e00;
+}
+
+.league-mlb {
+    --st-league-color: #005a9c;
+}
+
+.league-nhl {
+    --st-league-color: #6c757d;
 }
 
 .league-pga {
-    border-left: 4px solid #198754;
+    --st-league-color: #198754;
 }
 
 @keyframes leagueUpdate {

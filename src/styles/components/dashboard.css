@@ -338,3 +338,145 @@
     color: var(--st-text-muted);
     font-size: 0.85rem;
 }
+
+/* Dashboard league sections */
+
+.dashboard-leagues {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.dashboard-league-section {
+    padding: 1rem;
+    background: var(--st-table-bg);
+    border: 1px solid var(--st-border);
+    border-left-width: 4px;
+    border-radius: 0.75rem;
+}
+
+.dashboard-league-section .league-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+}
+
+.dashboard-league-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.dashboard-league-heading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 0.6rem;
+    font-size: 1.2rem;
+}
+
+.dashboard-league-heading h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0;
+    color: var(--st-text);
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.dashboard-league-heading h3 small {
+    color: var(--st-text-muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.dashboard-league-heading h3 small::before {
+    content: "(";
+}
+
+.dashboard-league-heading h3 small::after {
+    content: ")";
+}
+
+.dashboard-league-heading p {
+    margin: 0.2rem 0 0;
+    color: var(--st-text-muted);
+    font-size: 0.75rem;
+}
+
+.dashboard-league-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+}
+
+.dashboard-league-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.dashboard-league-actions .btn:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+.dashboard-league-action-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 0 0.3rem;
+    color: var(--st-text);
+    background: var(--st-surface-alt);
+    border-radius: 999px;
+    font-size: 0.65rem;
+}
+
+.dashboard-league-empty {
+    color: var(--st-text-muted);
+    background: var(--st-surface);
+    border-color: var(--st-border);
+    box-shadow: none;
+}
+
+.dashboard-league-empty .card-body {
+    padding: 1.25rem;
+    text-align: center;
+}
+
+/* Existing SportsTracker league colors */
+
+.dashboard-league-section {
+    border-left-color: var(--st-league-color);
+}
+
+@media (max-width: 767.98px) {
+    .dashboard-league-section .league-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-league-actions {
+        width: 100%;
+    }
+
+    .dashboard-league-actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

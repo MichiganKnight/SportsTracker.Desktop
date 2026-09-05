@@ -4,6 +4,7 @@ import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
 import { DashboardLayout } from "./pages/dashboard/DashboardLayout.tsx";
 import { DashboardOverviewPage } from "./pages/dashboard/DashboardOverviewPage.tsx";
 import { DashboardFollowingPage } from "./pages/dashboard/DashboardFollowingPage.tsx";
+import { DashboardLivePage } from "./pages/dashboard/DashboardLivePage.tsx";
 
 function App() {
     return (
@@ -17,7 +18,7 @@ function App() {
 
                         <Route path="following" element={<DashboardFollowingPage />} />
 
-                        <Route path="live" element={<PlaceholderPage eyebrow="Dashboard" title="Live Now" description="View Events Currently in Progress" />} />
+                        <Route path="live" element={<DashboardLivePage />} />
 
                         <Route path="leagues" element={<PlaceholderPage eyebrow="Dashboard" title="Leagues" description="Browse All Supported Leagues" />} />
                     </Route>

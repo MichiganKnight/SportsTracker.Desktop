@@ -26,7 +26,14 @@
     padding: 0 1.25rem;
 
     color: var(--st-text-muted);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    appearance: none;
+
+    font: inherit;
     text-decoration: none;
+    cursor: pointer;
 
     transition:
             color 0.15s ease,
@@ -44,6 +51,17 @@
 .games-date-nav-button:hover {
     color: var(--st-text);
     background: var(--st-table-hover);
+}
+
+.games-date-nav-button:active {
+    background: var(--st-surface-alt);
+}
+
+.games-date-nav-button:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 2px solid var(--st-primary);
+    outline-offset: -3px;
 }
 
 .games-date-center {
@@ -96,13 +114,19 @@
 }
 
 .games-today-link {
-    color: var(--bs-primary);
+    padding: 0;
+    color: var(--st-primary);
+    background: transparent;
+    border: 0;
+    appearance: none;
     font-size: 0.85rem;
     font-weight: 500;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .games-today-link:hover {
+    color: var(--st-primary);
     text-decoration: underline;
 }
 

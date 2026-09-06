@@ -94,4 +94,14 @@ export const LeagueConfiguration = {
     getAll: (): League[] => Object.keys(Leagues) as League[],
 
     get: (league: League): LeagueInfo => Leagues[league],
+
+    getFromRoute: (value: string | undefined): LeagueInfo | undefined => {
+        if (!value) {
+            return undefined
+        }
+
+        const league = (Object.keys(Leagues) as League[]).find((item) => item.toLowerCase() === value.toLowerCase())
+
+        return league ? Leagues[league] : undefined
+    }
 }

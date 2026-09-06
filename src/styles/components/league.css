@@ -1,0 +1,139 @@
+.league-page {
+    --st-current-league-color:
+            var(--st-league-color, var(--st-primary));
+}
+
+.league-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--st-surface);
+    border: 1px solid var(--st-border);
+    border-left: 4px solid var(--st-current-league-color);
+    border-radius: 0.75rem;
+}
+
+.league-page-title {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+.league-page-title h1 {
+    color: var(--st-text);
+    font-size: 1.65rem;
+}
+
+.league-page-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 0.7rem;
+    font-size: 1.4rem;
+}
+
+.league-navigation {
+    flex: 0 0 auto;
+}
+
+.league-navigation .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 38px;
+    font-size: 0.78rem;
+}
+
+.league-navigation .btn-outline-secondary {
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.league-navigation .btn-outline-secondary:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+.league-game-sections {
+    display: grid;
+    gap: 1rem;
+}
+
+.game-section {
+    overflow: hidden;
+    color: var(--st-text);
+    background: var(--st-surface);
+    border-color: var(--st-border);
+}
+
+.game-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    background: var(--st-table-header);
+    border-bottom-color: var(--st-border);
+}
+
+.game-section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--st-text);
+}
+
+.game-section-header h2 > span {
+    display: inline-flex;
+    color: var(--st-primary);
+}
+
+.game-section-header .badge {
+    min-width: 26px;
+    background: var(--st-surface-alt) !important;
+    color: var(--st-text-muted);
+    border: 1px solid var(--st-border);
+}
+
+.league-empty-state {
+    color: var(--st-text);
+    background: var(--st-surface);
+    border-color: var(--st-border);
+}
+
+@media (max-width: 991.98px) {
+    .league-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .league-navigation {
+        display: flex;
+        width: 100%;
+    }
+
+    .league-navigation .btn {
+        flex: 1;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .league-navigation {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .league-navigation .btn {
+        border-radius: 0.375rem !important;
+    }
+}

@@ -6,6 +6,7 @@ import { DashboardOverviewPage } from "./pages/dashboard/DashboardOverviewPage.t
 import { DashboardFollowingPage } from "./pages/dashboard/DashboardFollowingPage.tsx";
 import { DashboardLivePage } from "./pages/dashboard/DashboardLivePage.tsx";
 import { DashboardLeaguesPage } from "./pages/dashboard/DashboardLeaguesPage.tsx";
+import { GamesPage } from "./pages/GamesPage.tsx";
 
 function App() {
     return (
@@ -24,7 +25,7 @@ function App() {
                         <Route path="leagues" element={<DashboardLeaguesPage />} />
                     </Route>
 
-                    <Route path="games" element={<PlaceholderPage eyebrow="Schedule" title="Today's Games" description="Browse Games" />} />
+                    <Route path="games" element={<GamesPage />} />
 
                     <Route path="league/:leagueId" element={<PlaceholderPage eyebrow="League" title="League Overview" description="View League Games, Standings, Rankings, and Leaders" />} />
                     <Route path="league/:leagueId/standings" element={<PlaceholderPage eyebrow="League" title="Standings" description="View Conference, Division, and Overall League Standings" />} />

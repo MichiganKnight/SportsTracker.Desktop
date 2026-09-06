@@ -1,10 +1,20 @@
 import type { GameCardViewModel } from "../../shared/view-models/game-card.ts";
 import { League } from "../../shared/models/league.ts";
 
+function createRelativeStartTime(dayOffset: number, hour: number, minute: number): string {
+    const date = new Date();
+
+    date.setDate(date.getDate() + dayOffset);
+    date.setHours(hour, minute, 0, 0);
+
+    return date.toISOString();
+}
+
 export const gamesMock: GameCardViewModel[] = [
     {
         id: 'nfl-chi-gb',
         league: League.NFL,
+        startTime: createRelativeStartTime(0, 19, 15),
         status: 'live',
         statusText: '3rd Quarter · 7:42',
         awayTeam: {
@@ -25,6 +35,7 @@ export const gamesMock: GameCardViewModel[] = [
     {
         id: 'nba-bos-chi',
         league: League.NBA,
+        startTime: createRelativeStartTime(0, 19, 30),
         status: 'live',
         statusText: '4th Quarter · 5:18',
         awayTeam: {
@@ -45,6 +56,7 @@ export const gamesMock: GameCardViewModel[] = [
     {
         id: 'nhl-chi-det',
         league: League.NHL,
+        startTime: createRelativeStartTime(0, 18, 30),
         status: 'live',
         statusText: '2nd Period · 11:03',
         awayTeam: {
@@ -65,6 +77,7 @@ export const gamesMock: GameCardViewModel[] = [
     {
         id: 'mlb-stl-chc',
         league: League.MLB,
+        startTime: createRelativeStartTime(1, 19, 5),
         status: 'scheduled',
         statusText: 'Tomorrow · 7:05 PM',
         awayTeam: {
@@ -83,6 +96,7 @@ export const gamesMock: GameCardViewModel[] = [
     {
         id: 'cfb-mich-osu',
         league: League.CFB,
+        startTime: createRelativeStartTime(-1, 12, 0),
         status: 'final',
         statusText: 'Final',
         awayTeam: {
@@ -103,6 +117,7 @@ export const gamesMock: GameCardViewModel[] = [
     {
         id: 'cbb-duke-unc',
         league: League.CBB,
+        startTime: createRelativeStartTime(2, 20, 0),
         status: 'scheduled',
         statusText: 'Saturday · 8:00 PM',
         awayTeam: {

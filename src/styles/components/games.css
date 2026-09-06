@@ -393,3 +393,114 @@
         margin-inline: 0.75rem;
     }
 }
+
+.games-page-heading h1 {
+    color: var(--st-text);
+}
+
+.games-native-date-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.games-change-date-button {
+    position: relative;
+    cursor: pointer;
+}
+
+.games-today-link {
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+.games-leagues {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.games-league-section {
+    padding: 1rem;
+    background: var(--st-table-bg);
+    border: 1px solid var(--st-border);
+    border-left: 4px solid var(--st-league-color);
+    border-radius: 0.75rem;
+}
+
+.games-league-section .league-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.85rem;
+}
+
+.games-league-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.games-league-heading > span {
+    font-size: 1.15rem;
+}
+
+.games-league-heading h3 {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin: 0;
+    color: var(--st-text);
+    font-size: 1.05rem;
+}
+
+.games-league-heading h3 small {
+    color: var(--st-text-muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.games-league-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.games-league-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.games-league-actions .btn:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+.games-empty-state {
+    color: var(--st-text);
+    background: var(--st-surface);
+    border-color: var(--st-border);
+}
+
+@media (max-width: 767.98px) {
+    .games-league-section .league-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .games-league-actions {
+        width: 100%;
+    }
+
+    .games-league-actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

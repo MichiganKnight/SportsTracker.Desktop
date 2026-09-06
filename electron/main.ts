@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain,  } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
-import Menu = Electron.Menu;
+//import Menu = Electron.Menu;
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
@@ -42,7 +42,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-    Menu.setApplicationMenu(null);
+    //Menu.setApplicationMenu(null);
 
     ipcMain.handle('app:get-info', () => {
         return {

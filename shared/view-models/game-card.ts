@@ -13,6 +13,7 @@ export interface GameCardTeamViewModel {
 export interface GameCardViewModel {
     id: string
     league: League
+    startTime: string
     status: GameCardStatus
     statusText: string
     awayTeam: GameCardTeamViewModel

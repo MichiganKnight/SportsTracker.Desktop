@@ -10,6 +10,7 @@ import { GamesPage } from "./pages/GamesPage.tsx";
 import { LeagueLayout } from "./components/league/LeagueLayout.tsx";
 import { LeagueOverviewPage } from "./pages/league/LeagueOverviewPage.tsx";
 import { StandingsPage } from "./pages/league/StandingsPage.tsx";
+import { RankingsPage } from "./pages/league/RankingsPage.tsx";
 
 function App() {
     return (
@@ -35,7 +36,7 @@ function App() {
 
                         <Route path="standings" element={<StandingsPage />} />
 
-                        <Route path="rankings" element={<PlaceholderPage eyebrow="League" title="Rankings" description="View Latest College Football Polls and Rankings" />} />
+                        <Route path="rankings" element={<RankingsPage />} />
 
                         <Route path="leaders" element={<PlaceholderPage eyebrow="League" title="Leaders" description="View Leading Leaders Across Major Statistical Categories" />} />
                     </Route>

@@ -43,7 +43,7 @@
     border-bottom: 1px solid var(--st-border);
 }
 
-.standings-group-hader h5 {
+.standings-group-header h5 {
     font-size: .95rem;
     font-weight: 700;
 }
@@ -146,5 +146,84 @@
     .standings-team-logo {
         width: 24px;
         height: 24px;
+    }
+}
+
+.standings-page {
+    display: grid;
+    gap: 1rem;
+}
+
+.standings-page-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.standings-page-toolbar h2 {
+    color: var(--st-text);
+}
+
+.standings-group {
+    overflow: hidden;
+    color: var(--st-text);
+    background: var(--st-table-bg);
+    border-color: var(--st-border);
+}
+
+.standings-group-header {
+    color: var(--st-text);
+    background: var(--st-table-header);
+}
+
+.standings-group-abbreviation {
+    padding: 0.25rem 0.45rem;
+    color: var(--st-text-muted);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 0.35rem;
+}
+
+.standings-team-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: var(--st-text);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-size: 0.62rem;
+    font-weight: 700;
+}
+
+.standings-view-filter .btn-outline-secondary {
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.standings-view-filter .btn-outline-secondary:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+@media (max-width: 767.98px) {
+    .standings-page-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .standings-view-filter {
+        display: flex;
+        width: 100%;
+    }
+
+    .standings-view-filter .btn {
+        flex: 1;
+        min-width: 0;
     }
 }

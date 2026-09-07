@@ -39,7 +39,7 @@ export function DashboardLeagueSection({ league, games }: DashboardLeagueSection
 
                 <div className="dashboard-league-actions">
                     {!isGolf && (
-                        <Link to={`/league/${leagueId}`} className="btn btn-outline-secondary btns-sm">
+                        <Link to={`/league/${leagueId}/standings`} className="btn btn-outline-secondary btns-sm">
                             <BsListOl aria-hidden="true" />
                             Standings
                         </Link>

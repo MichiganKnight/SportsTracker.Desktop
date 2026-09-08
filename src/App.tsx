@@ -15,6 +15,11 @@ import { TeamLayout } from "./components/team/TeamLayout.tsx";
 import { TeamOverviewPage } from "./pages/team/TeamOverviewPage.tsx";
 import { TeamSchedulePage } from "./pages/team/TeamSchedulePage.tsx";
 import { TeamRosterPage } from "./pages/team/TeamRosterPage.tsx";
+import { AthleteLayout } from "./components/athlete/AthleteLayout.tsx";
+import { AthleteOverviewPage } from "./pages/athlete/AthleteOverviewPage.tsx";
+import { AthleteStatsPage } from "./pages/athlete/AthleteStatsPage.tsx";
+import { AthleteGameLogPage } from "./pages/athlete/AthleteGameLogPage.tsx";
+import { AthleteSplitsPage } from "./pages/athlete/AthleteSplitsPage.tsx";
 
 function App() {
     return (
@@ -51,6 +56,16 @@ function App() {
                         <Route path="schedule" element={<TeamSchedulePage/>}/>
 
                         <Route path="roster" element={<TeamRosterPage/>}/>
+                    </Route>
+
+                    <Route path="athlete/:leagueId/:athleteId" element={<AthleteLayout />}>
+                        <Route index element={<AthleteOverviewPage />}/>
+
+                        <Route path="stats" element={<AthleteStatsPage/>}/>
+
+                        <Route path="game-log" element={<AthleteGameLogPage/>}/>
+
+                        <Route path="splits" element={<AthleteSplitsPage/>}/>
                     </Route>
 
                     <Route path="*" element={<Navigate to="/dashboard" replace/>}/>

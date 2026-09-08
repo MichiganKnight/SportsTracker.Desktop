@@ -31,7 +31,7 @@ export function FavoriteTeamCard({ team }: { team: FavoriteTeamViewModel }) {
 export function FavoriteAthleteCard({ athlete }: { athlete: FavoriteAthleteViewModel }) {
     return (
         <article className="dashboard-favorite-athlete">
-            <div className="dashboard-favorite-athlete-link">
+            <Link to={`/athlete/${athlete.league.toLowerCase()}/${athlete.id}`} className="dashboard-favorite-athlete-link">
                 <div className="dashboard-favorite-athlete-image-wrap">
                     {athlete.initials ? (
                         <span className="dashboard-favorite-athlete-initials">
@@ -51,7 +51,7 @@ export function FavoriteAthleteCard({ athlete }: { athlete: FavoriteAthleteViewM
                         {athlete.position} - {athlete.teamName}
                     </div>
                 </div>
-            </div>
+            </Link>
 
             <button className="dashboard-favorite-athlete-remove" type="button" aria-label={`Unfollow ${athlete.name}`} title={`Unfollow ${athlete.name}`}>
                 <BsStarFill />

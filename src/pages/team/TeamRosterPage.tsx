@@ -1,5 +1,6 @@
 import type { RosterPlayerViewModel, TeamPageViewModel } from "../../../shared/view-models/team.ts";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
+import type { League } from "../../../shared/models/league.ts";
 
 interface TeamOutletContext {
     teamPage: TeamPageViewModel
@@ -39,7 +40,7 @@ export function TeamRosterPage() {
 
                                 <tbody>
                                     {group.players.map((player) => (
-                                        <RosterPlayerRow key={player.id} player={player} />
+                                        <RosterPlayerRow key={player.id} player={player} league={teamPage.team.league} />
                                     ))}
                                 </tbody>
                             </table>
@@ -51,7 +52,7 @@ export function TeamRosterPage() {
     )
 }
 
-function RosterPlayerRow({ player }: { player: RosterPlayerViewModel }) {
+function RosterPlayerRow({ player, league }: { player: RosterPlayerViewModel, league: League }) {
     const batsThrows = player.bats || player.throws ? `${player.bats ?? '-'} / ${player.throws ?? '-'}` : '-'
 
     return (
@@ -63,7 +64,7 @@ function RosterPlayerRow({ player }: { player: RosterPlayerViewModel }) {
                     </span>
 
                     <div>
-                        <div className="fw-semibold">
+                        <Link to={`/athlete/${league.toLowerCase()}/${player.id}`} className="athlete-link fw-semibold">
                             {player.jersey && (
                                 <span className="text-secondary me-1">
                                     #{player.jersey}
@@ -71,7 +72,7 @@ function RosterPlayerRow({ player }: { player: RosterPlayerViewModel }) {
                             )}
 
                             {player.displayName}
-                        </div>
+                        </Link>
 
                         {player.birthPlace && (
                             <div className="text-secondary small">

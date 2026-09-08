@@ -1,4 +1,4 @@
-import type { RosterGroupViewModel, TeamDetailsViewModel, TeamPageViewModel } from "../../shared/view-models/team.ts";
+import type { RosterGroupViewModel, RosterPlayerViewModel, TeamDetailsViewModel, TeamPageViewModel } from "../../shared/view-models/team.ts";
 import { League, type League as LeagueType } from "../../shared/models/league.ts";
 import type { GameCardStatus, GameCardViewModel } from "../../shared/view-models/game-card.ts";
 
@@ -6,6 +6,11 @@ interface OpponentSeed {
     id: string
     name: string
     abbreviation: string
+}
+
+export interface RosterPlayerMatch {
+    team: TeamDetailsViewModel,
+    player: RosterPlayerViewModel
 }
 
 const teamDetails: TeamDetailsViewModel[] = [
@@ -296,6 +301,27 @@ export function getTeamMock(league: LeagueType, teamId: string): TeamPageViewMod
         roster: rosters[team.id] ?? [],
         schedule: createSchedule(team)
     }
+}
+
+export function findRosterPlayerMock(league: LeagueType, athleteId: string): RosterPlayerMatch | undefined {
+    for (const team of teamDetails) {
+        if (team.league !== league) {
+            continue
+        }
+
+        for (const group of rosters[team.id] ?? []) {
+            const player = group.players.find((item) => item.id === athleteId)
+
+            if (player) {
+                return {
+                    team,
+                    player
+                }
+            }
+        }
+    }
+
+    return undefined
 }
 
 function createSchedule(team: TeamDetailsViewModel): GameCardViewModel[] {

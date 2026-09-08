@@ -626,12 +626,12 @@
 }
 
 .athlete-splits-table tbody tr:nth-child(even),
-.athlete-splits-name {
+.athlete-splits-table tbody tr:nth-child(even) .athlete-splits-name {
     background-color: var(--st-table-row-alt);
 }
 
 .athlete-splits-table tbody tr:hover,
-.athlete-splits-name {
+.athlete-splits-table tbody tr:hover .athlete-splits-name {
     background-color: var(--st-table-hover);
 }
 
@@ -788,4 +788,83 @@
     .athlete-fantasy-projection {
         grid-column: auto;
     }
+}
+
+.athlete-header-card {
+    overflow: hidden;
+    border-color: var(--st-border);
+}
+
+.athlete-name {
+    color: var(--st-text);
+    font-size: 1.75rem;
+}
+
+.athlete-initials {
+    width: 104px;
+    height: 104px;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.athlete-team-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: var(--st-text-muted);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-size: 0.62rem;
+    font-weight: 700;
+}
+
+.athlete-navigation .btn-outline-secondary {
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.athlete-navigation .btn-outline-secondary:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+.athlete-link {
+    color: var(--st-text);
+    text-decoration: none;
+}
+
+.athlete-link:hover {
+    color: var(--st-primary);
+}
+
+.dashboard-favorite-athlete-link {
+    text-decoration: none;
+}
+
+.athlete-stats-category-nav .btn-outline-secondary,
+.athlete-splits-category-nav .btn-outline-secondary {
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.athlete-stats-category-nav .btn-outline-secondary:hover,
+.athlete-splits-category-nav .btn-outline-secondary:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+.athlete-splits-card {
+    overflow: hidden;
+    color: var(--st-text);
+    background: var(--st-surface);
+    border-color: var(--st-border);
+}
+
+.athlete-gamelog-result {
+    display: inline-flex;
 }

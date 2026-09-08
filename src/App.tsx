@@ -1,6 +1,5 @@
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
-import { PlaceholderPage } from "./pages/PlaceholderPage.tsx";
 import { DashboardLayout } from "./components/dashboard/DashboardLayout.tsx";
 import { DashboardOverviewPage } from "./pages/dashboard/DashboardOverviewPage.tsx";
 import { DashboardFollowingPage } from "./pages/dashboard/DashboardFollowingPage.tsx";
@@ -11,6 +10,7 @@ import { LeagueLayout } from "./components/league/LeagueLayout.tsx";
 import { LeagueOverviewPage } from "./pages/league/LeagueOverviewPage.tsx";
 import { StandingsPage } from "./pages/league/StandingsPage.tsx";
 import { RankingsPage } from "./pages/league/RankingsPage.tsx";
+import { LeagueLeadersPage } from "./pages/league/LeagueLeadersPage.tsx";
 
 function App() {
     return (
@@ -38,7 +38,7 @@ function App() {
 
                         <Route path="rankings" element={<RankingsPage />} />
 
-                        <Route path="leaders" element={<PlaceholderPage eyebrow="League" title="Leaders" description="View Leading Leaders Across Major Statistical Categories" />} />
+                        <Route path="leaders" element={<LeagueLeadersPage />} />
                     </Route>
 
                     <Route path="*" element={<Navigate to="/dashboard" replace />} />

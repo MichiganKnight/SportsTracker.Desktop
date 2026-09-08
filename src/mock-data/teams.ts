@@ -324,6 +324,22 @@ export function findRosterPlayerMock(league: LeagueType, athleteId: string): Ros
     return undefined
 }
 
+export function findTeamScheduleGameMock(league: LeagueType, gameId: string): GameCardViewModel | undefined {
+    for (const team of teamDetails) {
+        if (team.league !== league) {
+            continue
+        }
+
+        const game = createSchedule(team).find((item) => item.id === gameId)
+
+        if (game) {
+            return game
+        }
+    }
+
+    return undefined
+}
+
 function createSchedule(team: TeamDetailsViewModel): GameCardViewModel[] {
     const teamOpponents = opponents[team.id] ?? []
     const offsets = [-7, 3, 10]

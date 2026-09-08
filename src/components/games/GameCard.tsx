@@ -1,5 +1,6 @@
 import type { GameCardTeamViewModel, GameCardViewModel } from "../../../shared/view-models/game-card.ts";
 import { BsStarFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 interface GameCardProps {
     game: GameCardViewModel
@@ -55,6 +56,8 @@ export function GameCard({ game, isFavorite = false }: GameCardProps) {
                     </div>
                 </div>
             </div>
+
+            <Link to={`/game/${game.league.toLowerCase()}/${game.id}`} className="stretched-link" aria-label={`View ${game.awayTeam.name} at ${game.homeTeam.name}`} />
         </article>
     )
 }

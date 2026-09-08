@@ -86,3 +86,130 @@
     font-size: .88rem;
     line-height: 1.55;
 }
+
+.game-header-card {
+    overflow: hidden;
+}
+
+.game-header-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-bottom: 1.25rem;
+}
+
+.game-header-matchup {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.game-header-team {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+}
+
+.game-header-team:last-child {
+    direction: rtl;
+    text-align: right;
+}
+
+.game-header-team:last-child > * {
+    direction: ltr;
+}
+
+.game-header-team h1 {
+    margin: 0;
+    color: var(--st-text);
+    font-size: 1.05rem;
+}
+
+.game-header-team span {
+    color: var(--st-text-muted);
+    font-size: 0.75rem;
+}
+
+.game-details-logo-placeholder,
+.game-featured-athlete-placeholder,
+.boxscore-team-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--st-text-muted);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.game-details-logo-placeholder {
+    font-size: 0.8rem;
+}
+
+.game-featured-athlete-placeholder {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    font-size: 0.68rem;
+}
+
+.boxscore-team-placeholder {
+    width: 38px;
+    height: 38px;
+    font-size: 0.65rem;
+}
+
+.game-featured-athlete + .game-featured-athlete {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--st-border);
+}
+
+.game-header-separator {
+    color: var(--st-text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.game-navigation .btn-outline-secondary,
+.playbyplay-page .btn-outline-secondary {
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.game-navigation .btn-outline-secondary:hover,
+.playbyplay-page .btn-outline-secondary:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+}
+
+@media (max-width: 767.98px) {
+    .game-header-matchup {
+        grid-template-columns: 1fr;
+    }
+
+    .game-header-separator {
+        text-align: center;
+    }
+
+    .game-header-team:last-child {
+        direction: ltr;
+        text-align: left;
+    }
+
+    .game-navigation .btn-group {
+        display: flex;
+        width: 100%;
+    }
+
+    .game-navigation .btn {
+        flex: 1;
+    }
+}

@@ -20,6 +20,10 @@ import { AthleteOverviewPage } from "./pages/athlete/AthleteOverviewPage.tsx";
 import { AthleteStatsPage } from "./pages/athlete/AthleteStatsPage.tsx";
 import { AthleteGameLogPage } from "./pages/athlete/AthleteGameLogPage.tsx";
 import { AthleteSplitsPage } from "./pages/athlete/AthleteSplitsPage.tsx";
+import { GameLayout } from "./components/game/GameLayout.tsx";
+import { GameSummaryPage } from "./pages/game/GameSummaryPage.tsx";
+import { GameBoxScorePage } from "./pages/game/GameBoxScorePage.tsx";
+import { GamePlayByPlayPage } from "./pages/game/GamePlayByPlayPage.tsx";
 
 function App() {
     return (
@@ -66,6 +70,14 @@ function App() {
                         <Route path="game-log" element={<AthleteGameLogPage/>}/>
 
                         <Route path="splits" element={<AthleteSplitsPage/>}/>
+                    </Route>
+
+                    <Route path="game/:leagueId/:gameId" element={<GameLayout />}>
+                        <Route index element={<GameSummaryPage />}/>
+
+                        <Route path="box-score" element={<GameBoxScorePage/>}/>
+
+                        <Route path="play-by-play" element={<GamePlayByPlayPage/>}/>
                     </Route>
 
                     <Route path="*" element={<Navigate to="/dashboard" replace/>}/>

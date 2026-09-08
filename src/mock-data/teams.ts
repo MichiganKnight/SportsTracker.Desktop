@@ -388,3 +388,18 @@ function createRelativeStartTime(dayOffset: number, hour: number, minute: number
 
     return date.toISOString()
 }
+
+export function getAllTeamMocks(): TeamDetailsViewModel[] {
+    return [...teamDetails]
+}
+
+export function getAllRosterPlayerMocks(): RosterPlayerMatch[] {
+    return teamDetails.flatMap((team) =>
+        (rosters[team.id] ?? []).flatMap((group) =>
+            group.players.map((player) => ({
+                team,
+                player,
+            })),
+        ),
+    )
+}

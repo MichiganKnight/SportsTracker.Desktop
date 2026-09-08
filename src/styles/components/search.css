@@ -234,3 +234,74 @@
         height: 58px;
     }
 }
+
+.search-page-form {
+    width: min(100%, 720px);
+    margin-top: 1rem;
+}
+
+.search-page-form .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.search-results-summary {
+    color: var(--st-text-muted);
+}
+
+.search-section-header {
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--st-border);
+}
+
+.search-result-title {
+    color: var(--st-text);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.search-result-card {
+    color: var(--st-text);
+}
+
+.search-result-card:hover {
+    color: var(--st-text);
+}
+
+.search-empty-icon {
+    color: var(--st-text-muted);
+}
+
+.navbar-search-result-image-wrap {
+    font-weight: 700;
+    line-height: 1;
+}
+
+.navbar-search-result:last-of-type {
+    border-bottom: 1px solid var(--st-border);
+}
+
+@media (max-width: 575.98px) {
+    .navbar-controls {
+        width: auto;
+    }
+
+    .navbar-search-container {
+        width: 42px;
+    }
+
+    .navbar-search .input-group {
+        flex-wrap: nowrap;
+    }
+
+    .navbar-search .form-search-sports:focus {
+        position: fixed;
+        top: 0.55rem;
+        left: 0.75rem;
+        right: 4.25rem;
+        z-index: 1060;
+        display: block;
+        width: auto;
+    }
+}

@@ -146,3 +146,123 @@
         height: 180px;
     }
 }
+
+.team-page {
+    color: var(--st-text);
+}
+
+.team-header-card {
+    border-color: var(--st-border);
+}
+
+.team-header-card h1 {
+    color: var(--st-text);
+    font-size: 1.75rem;
+}
+
+.team-header-logo-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 88px;
+    color: var(--st-text);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.team-navigation .btn-outline-secondary {
+    color: var(--st-text-muted);
+    border-color: var(--st-border);
+}
+
+.team-navigation .btn-outline-secondary:hover {
+    color: var(--st-text);
+    background: var(--st-table-hover);
+    border-color: var(--st-card-hover-border);
+}
+
+.team-venue-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    width: 100%;
+    height: 180px;
+    color: var(--st-text-muted);
+    background:
+            linear-gradient(
+                    135deg,
+                    var(--st-surface-alt),
+                    var(--st-table-header)
+            );
+    border-bottom: 1px solid var(--st-border);
+}
+
+.team-venue-placeholder svg {
+    width: 30px;
+    height: 30px;
+}
+
+.team-venue-placeholder span {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.team-roster-page,
+.team-schedule-page {
+    display: grid;
+    gap: 2rem;
+}
+
+.team-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.team-section-heading h2 {
+    color: var(--st-text);
+}
+
+.roster-player {
+    min-width: 250px;
+}
+
+.roster-player-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    color: var(--st-text-muted);
+    background: var(--st-surface-alt);
+    border: 1px solid var(--st-border);
+    border-radius: 50%;
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+    .team-navigation .btn-group {
+        display: flex;
+        width: 100%;
+    }
+
+    .team-navigation .btn {
+        flex: 1;
+    }
+
+    .team-header-logo-wrap {
+        width: 90px;
+        height: 90px;
+        flex-basis: 90px;
+    }
+}

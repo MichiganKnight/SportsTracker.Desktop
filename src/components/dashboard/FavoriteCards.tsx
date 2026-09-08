@@ -1,10 +1,11 @@
 import type { FavoriteAthleteViewModel, FavoriteTeamViewModel } from "../../../shared/view-models/following.ts";
 import { BsPersonFill, BsStarFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 export function FavoriteTeamCard({ team }: { team: FavoriteTeamViewModel }) {
     return (
         <article className="dashboard-favorite-team">
-            <div className="dashboard-favorite-team-link">
+            <Link to={`/team/${team.league.toLowerCase()}/${team.id}`} className="dashboard-favorite-team-link">
                 <div className="dashboard-favorite-team-mark" aria-hidden="true">
                     {team.abbreviation.substring(0, 2)}
                 </div>
@@ -18,7 +19,7 @@ export function FavoriteTeamCard({ team }: { team: FavoriteTeamViewModel }) {
                         {team.league}
                     </div>
                 </div>
-            </div>
+            </Link>
 
             <button className="dashboard-favorite-team-remove" type="button" aria-label={`Unfollow ${team.name}`} title={`Unfollow ${team.name}`}>
                 <BsStarFill />

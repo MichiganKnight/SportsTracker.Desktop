@@ -3,6 +3,8 @@ import { useOutletContext } from "react-router-dom";
 import { gamesMock } from "../../mock-data/games.ts";
 import { GameSection } from "../../components/games/GameSection.tsx";
 import { BsBroadcast, BsClock, BsFlagFill } from "react-icons/bs";
+import { golfEventsMock } from "../../mock-data/golf.ts";
+import { GolfEventCard } from "../../components/golf/GolfEventCard.tsx";
 
 interface LeagueOutletContext {
     league: LeagueInfo
@@ -14,17 +16,15 @@ export function LeagueOverviewPage() {
     const games = gamesMock.filter((game) => game.league === league.league)
 
     if (league.sport === Sport.Golf) {
-        return (
-            <div className="card shadow-sm league-empty-state">
-                <div className="card-body text-center py-5">
-                    <h2 className="h5 mb-2">
-                        No Tournaments Available
-                    </h2>
+        const tournaments = golfEventsMock.filter((event) => event.league === league.league)
 
-                    <p className="text-secondary mb-0">
-                        Tournament Cards Will Appear Here
-                    </p>
-                </div>
+        return (
+            <div className="row g-3">
+                {tournaments.map((event) => (
+                    <div className="col-12 col-xl-6" key={event.id}>
+                        <GolfEventCard event={event} />
+                    </div>
+                ))}
             </div>
         )
     }
@@ -35,9 +35,9 @@ export function LeagueOverviewPage() {
 
     return (
         <div className="league-game-sections">
-            <GameSection title="Live Games" icon={<BsBroadcast />} games={liveGames} />
-            <GameSection title="Upcoming Games" icon={<BsClock />} games={upcomingGames} />
-            <GameSection title="Final Games" icon={<BsFlagFill />} games={finalGames} />
+            <GameSection title="Live Games" icon={<BsBroadcast/>} games={liveGames}/>
+            <GameSection title="Upcoming Games" icon={<BsClock/>} games={upcomingGames}/>
+            <GameSection title="Final Games" icon={<BsFlagFill/>} games={finalGames}/>
         </div>
     )
 }

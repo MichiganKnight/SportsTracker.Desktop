@@ -24,6 +24,7 @@ import { GameLayout } from "./components/game/GameLayout.tsx";
 import { GameSummaryPage } from "./pages/game/GameSummaryPage.tsx";
 import { GameBoxScorePage } from "./pages/game/GameBoxScorePage.tsx";
 import { GamePlayByPlayPage } from "./pages/game/GamePlayByPlayPage.tsx";
+import { GolfTournamentPage } from "./pages/golf/GolfTournamentPage.tsx";
 
 function App() {
     return (
@@ -43,6 +44,8 @@ function App() {
                     </Route>
 
                     <Route path="games" element={<GamesPage/>}/>
+
+                    <Route path="golf/:eventId" element={<GolfTournamentPage />} />
 
                     <Route path="league/:leagueId" element={<LeagueLayout/>}>
                         <Route index element={<LeagueOverviewPage/>}/>

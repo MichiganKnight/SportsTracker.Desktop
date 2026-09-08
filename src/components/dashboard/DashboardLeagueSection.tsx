@@ -3,15 +3,19 @@ import type { GameCardViewModel } from "../../../shared/view-models/game-card.ts
 import { Link } from "react-router-dom";
 import { BsCalendarEvent, BsListOl } from "react-icons/bs";
 import { GameCard } from "../games/GameCard.tsx";
+import type { GolfEventViewModel } from "../../../shared/view-models/golf.ts";
+import { GolfEventCard } from "../golf/GolfEventCard.tsx";
 
 interface DashboardLeagueSectionProps {
     league: LeagueInfo
     games: GameCardViewModel[]
+    golfEvents?: GolfEventViewModel[]
 }
 
-export function DashboardLeagueSection({ league, games }: DashboardLeagueSectionProps) {
+export function DashboardLeagueSection({ league, games, golfEvents = [] }: DashboardLeagueSectionProps) {
     const leagueId = league.league.toLowerCase()
     const isGolf = league.sport === Sport.Golf
+    const events = isGolf ? golfEvents : games
     const eventLabel = isGolf ? 'Tournaments' : 'Games'
 
     return (
@@ -19,15 +23,15 @@ export function DashboardLeagueSection({ league, games }: DashboardLeagueSection
             <header className="league-header">
                 <div className="dashboard-league-heading">
                     <span className="dashboard-league-heading-icon" aria-hidden="true">
-                    {league.icon}
-                </span>
+                        {league.icon}
+                    </span>
 
                     <div>
                         <h3>
                             {league.displayName}
 
                             <small>
-                                {games.length}
+                                {events.length}
                             </small>
                         </h3>
 
@@ -40,27 +44,31 @@ export function DashboardLeagueSection({ league, games }: DashboardLeagueSection
                 <div className="dashboard-league-actions">
                     {!isGolf && (
                         <Link to={`/league/${leagueId}/standings`} className="btn btn-outline-secondary btns-sm">
-                            <BsListOl aria-hidden="true" />
+                            <BsListOl aria-hidden="true"/>
                             Standings
                         </Link>
                     )}
 
                     <Link to={`/league/${leagueId}`} className="btn btn-outline-secondary btns-sm">
-                        <BsCalendarEvent aria-hidden="true" />
+                        <BsCalendarEvent aria-hidden="true"/>
 
                         All {eventLabel}
 
                         <span className="dashboard-league-action-count">
-                            {games.length}
+                            {events.length}
                         </span>
                     </Link>
                 </div>
             </header>
 
-            {games.length > 0 ? (
+            {events.length > 0 ? (
                 <div className="row g-3">
-                    {games.map((game) => (
-                        <div className="col-12 col-lg-4" key={game.id}>
+                    {isGolf ? golfEvents?.map((event) => (
+                        <div className="col-12 col-lg-4" key={event.id}>
+                            <GolfEventCard event={event} />
+                        </div>
+                    )) : games.map((game) => (
+                        <div className="col-12 col-lg-4">
                             <GameCard game={game} />
                         </div>
                     ))}

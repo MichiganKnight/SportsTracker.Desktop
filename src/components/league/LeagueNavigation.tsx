@@ -22,7 +22,7 @@ export function LeagueNavigation({ league }: LeagueNavigationProps) {
             <NavLink to={`/league/${leagueId}`} end className={getNavigationClass}>
                 <BsCalendarEvent aria-hidden="true" />
 
-                Games
+                {isGolf ? 'Tournaments' : 'Games'}
             </NavLink>
 
             {!isGolf && (

@@ -1,5 +1,5 @@
-import type { LeagueId } from '../../shared/models/league.js'
-import type { Scoreboard } from '../../shared/models/scoreboard.js'
+import type { League } from '../../shared/models/league.js'
+import type { LiveScoreboardViewModel } from "../../shared/view-models/live-scoreboard.ts";
 
 interface AppInfo {
     name: string
@@ -11,14 +11,8 @@ interface SportsTrackerDesktopApi {
     getAppInfo: () => Promise<AppInfo>
 
     scoreboards: {
-        get: (
-            leagueId: LeagueId,
-            requestedDate?: string,
-        ) => Promise<Scoreboard>
-
-        getAll: (
-            requestedDate?: string,
-        ) => Promise<Scoreboard[]>
+        get: (league: League, requestedDate?: string) => Promise<LiveScoreboardViewModel>
+        getAll: (requestedDate?: string) => Promise<LiveScoreboardViewModel[]>
     }
 }
 

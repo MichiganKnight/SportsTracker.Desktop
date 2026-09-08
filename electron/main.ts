@@ -1,15 +1,14 @@
-import { app, BrowserWindow, ipcMain,  } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from "node:url";
-//import Menu = Electron.Menu;
+import { getAllScoreboards, getScoreboard } from "./services/espn-scoreboard-service.js";
+import { League, LeagueConfiguration } from "../shared/models/league.js";
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 const developmentUrl = 'http://localhost:5173';
 
 function createWindow() {
-    const windowIconPath = app.isPackaged
-        ? join(app.getAppPath(), 'dist', 'favicon.ico')
-        : join(app.getAppPath(), 'public', 'favicon.ico')
+    const windowIconPath = app.isPackaged ? join(app.getAppPath(), 'dist', 'favicon.ico') : join(app.getAppPath(), 'public', 'favicon.ico')
 
     const mainWindow = new BrowserWindow({
         title: 'SportsTracker',
@@ -41,23 +40,67 @@ function createWindow() {
     void mainWindow.loadURL(developmentUrl);
 }
 
-app.whenReady().then(() => {
-    //Menu.setApplicationMenu(null);
-
+function registerIpcHandlers() {
     ipcMain.handle('app:get-info', () => {
         return {
+            name: app.getName(),
             version: app.getVersion(),
+            platform: process.platform
         }
     })
 
-    createWindow();
+    ipcMain.handle('scoreboard:get', async (_event, leagueValue: unknown, requestedDateValue?: unknown) => {
+        const league = resolveLeague(leagueValue)
+        const requestedDate = resolveRequestedDate(requestedDateValue)
+
+        return getScoreboard(league, requestedDate)
+    })
+
+    ipcMain.handle('scoreboard:get-all', async (_event, requestedDateValue?: unknown) => {
+        const requestedDate = resolveRequestedDate(requestedDateValue)
+
+        return getAllScoreboards(requestedDate)
+    })
+}
+
+function resolveLeague(value: unknown): League {
+    if (typeof value !== 'string') {
+        throw new Error('League is Required')
+    }
+
+    const configuration = LeagueConfiguration.getFromRoute(value)
+
+    if (!configuration) {
+        throw new Error(`Unsupported League: ${value}`)
+    }
+
+    return configuration.league
+}
+
+function resolveRequestedDate(value: unknown): string | undefined {
+    if (value === undefined || value === '') {
+        return undefined
+    }
+
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        throw new Error('Requested Date Must Use YYYY-MM-DD')
+    }
+
+    return value
+}
+
+app.whenReady().then(() => {
+    Menu.setApplicationMenu(null);
+
+    registerIpcHandlers()
+    createWindow()
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
+            createWindow()
         }
-    });
-});
+    })
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

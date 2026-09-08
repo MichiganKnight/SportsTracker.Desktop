@@ -3,9 +3,18 @@ import { FollowingSummary } from "../../components/dashboard/FollowingSummary.ts
 import { LiveSummary } from "../../components/dashboard/LiveSummary.tsx";
 import { LeaguesSummary } from "../../components/dashboard/LeaguesSummary.tsx";
 import { followingMock } from "../../mock-data/following.ts";
+import { useScoreboards } from "../../hooks/useScoreboards.ts";
+import { golfEventsMock } from "../../mock-data/golf.ts";
 
 export function DashboardOverviewPage() {
-    const {liveEvents, leagues} = dashboardOverviewMock;
+    const { scoreboards } = useScoreboards()
+
+    const liveGameCount = scoreboards
+        .flatMap((scoreboard) => scoreboard.games)
+        .filter((game) => game.status === 'live')
+        .length
+
+    const liveGolfCount = golfEventsMock.filter((event) => event.status === 'live').length
 
     return (
         <>
@@ -13,11 +22,11 @@ export function DashboardOverviewPage() {
 
             <div className="row g-4">
                 <div className="col-lg-5">
-                    <LiveSummary liveCount={liveEvents} />
+                    <LiveSummary liveCount={liveGameCount + liveGolfCount} />
                 </div>
 
                 <div className="col-lg-7">
-                    <LeaguesSummary leagues={leagues} />
+                    <LeaguesSummary leagues={dashboardOverviewMock.leagues} />
                 </div>
             </div>
         </>

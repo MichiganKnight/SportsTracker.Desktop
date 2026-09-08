@@ -6,6 +6,7 @@ export interface GameCardTeamViewModel {
     id: string
     name: string
     abbreviation: string
+    logoUrl?: string
     record?: string
     score?: string
 }

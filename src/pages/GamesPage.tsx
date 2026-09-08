@@ -1,9 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import { formatDateValue, formatFullDate, parseDateValue } from "../utils/date.ts";
-import { gamesMock } from "../mock-data/games.ts";
+import { useScoreboards } from '../hooks/useScoreboards.ts'
 import { LeagueConfiguration } from "../../shared/models/league.ts";
 import { DateNavigation } from "../components/games/DateNavigation.tsx";
 import { GamesLeagueSection } from "../components/games/GamesLeagueSection.tsx";
+import { LiveDataStatus } from "../components/data/LiveDataStatus.tsx";
 
 export function GamesPage() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -13,17 +14,18 @@ export function GamesPage() {
 
     const selectedDate = requestedDate && parseDateValue(requestedDate) ? requestedDate : today
 
-    const selectedGames = gamesMock.filter((game) => formatDateValue(new Date(game.startTime)) === selectedDate)
+    const { scoreboards, source, isLoading, error } = useScoreboards(selectedDate)
 
-    const leagueSections = LeagueConfiguration.getAll()
-        .map((leagueId) => {
-            const league = LeagueConfiguration.get(leagueId)
+    const selectedGames = scoreboards.flatMap((scoreboard) => scoreboard.games)
 
-            return {
-                league,
-                games: selectedGames.filter((game) => game.league === leagueId)
-            }
-        }).filter((section) => section.games.length > 0)
+    const leagueSections = LeagueConfiguration.getAll().map((leagueId) => {
+        const league = LeagueConfiguration.get(leagueId)
+
+        return {
+            league,
+            games: selectedGames.filter((game) => game.league === leagueId)
+        }
+    }).filter((section) => section.games.length > 0)
 
     const changeDate = (date: string) => {
         if (date === today) {
@@ -49,7 +51,9 @@ export function GamesPage() {
                 </div>
             </header>
 
-            <DateNavigation selectedDate={selectedDate} today={today} onDateChange={changeDate} />
+            <DateNavigation selectedDate={selectedDate} today={today} onDateChange={changeDate}/>
+
+            <LiveDataStatus source={source} isLoading={isLoading} error={error} />
 
             {leagueSections.length === 0 ? (
                 <div className="card games-empty-state">
@@ -66,7 +70,7 @@ export function GamesPage() {
             ) : (
                 <div className="games-leagues">
                     {leagueSections.map(({ league, games }) => (
-                        <GamesLeagueSection key={league.league} league={league} games={games} />
+                        <GamesLeagueSection key={league.league} league={league} games={games}/>
                     ))}
                 </div>
             )}

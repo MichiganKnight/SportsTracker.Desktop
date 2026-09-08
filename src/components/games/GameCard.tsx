@@ -66,9 +66,13 @@ function GameTeamRow({ team }: { team: GameCardTeamViewModel }) {
     return (
         <div className="team-row">
             <div className="d-flex align-items-center gap-2 min-w-0">
-                <div className="team-logo team-logo-placeholder" aria-hidden="true">
-                    {team.abbreviation.substring(0, 2)}
-                </div>
+                {team.logoUrl ? (
+                    <img className="team-logo game-team-logo" src={team.logoUrl} alt="" />
+                ) : (
+                    <div className="team-logo team-logo-placeholder" aria-hidden="true">
+                        {team.abbreviation.substring(0, 2)}
+                    </div>
+                )}
 
                 <div className="team-row-details">
                     <div className="team-row-name">
